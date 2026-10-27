@@ -1,0 +1,43 @@
+/* Seven screen-sized chapters. Pinned stories keep their internal snap stops. */
+.wp-slide-anchor{display:none}
+html.wp-slide-mode:has(body[data-page=landing]),html.wp-slide-mode.past-docked-chapters:has(body[data-page=landing]){scroll-snap-type:y mandatory!important;scroll-padding-top:0!important}
+html.wp-slide-mode.is-product-travel:has(body[data-page=landing]){scroll-snap-type:none!important}
+.wp-slide-mode .wp-slide-anchor{display:block;position:absolute;left:0;width:1px;height:1px;pointer-events:none;opacity:0;scroll-snap-align:start;scroll-snap-stop:always;scroll-margin:0!important}
+.wp-slide-mode body[data-page=landing] :is(.comparison-hero,.journey-section,.wp-products-why-slide,.enquiry-campaign,.wp-gallery-screen){scroll-snap-align:start;scroll-snap-stop:always;scroll-margin-top:0!important}
+.wp-slide-mode body[data-page=landing] .comparison-hero{scroll-margin-top:var(--chapter-header,80px)!important}
+.wp-slide-mode :is(.service-story,.wp-craft-story){scroll-snap-align:none}
+.wp-slide-mode body[data-page=landing] :is(.waterproofing-range,.waterproofing-why){scroll-snap-align:none;scroll-margin-top:0!important}
+.wp-slide-mode .wp-products-why-slide{height:100svh;display:grid;grid-template-rows:minmax(0,.52fr) minmax(0,.48fr);background:#fff}
+.wp-slide-mode body[data-page=landing] .wp-products-why-slide .waterproofing-range{height:100%;min-height:0;padding-top:calc(var(--chapter-header,80px) + 14px);padding-bottom:14px;gap:22px;overflow:visible}
+.wp-slide-mode .wp-products-why-slide .range-product-composition{height:100%;max-height:310px;min-height:0}
+.wp-slide-mode .wp-products-why-slide .range-featured-pack{height:calc(clamp(160px,27svh,270px) * var(--pack-height));bottom:16px}
+.wp-slide-mode .wp-products-why-slide .range-banner-copy .eyebrow{margin-bottom:10px}
+.wp-slide-mode .wp-products-why-slide .range-banner-copy h2{font-size:clamp(24px,2vw,34px)!important;margin-bottom:18px}
+.wp-slide-mode body[data-page=landing] .wp-products-why-slide .waterproofing-why{height:100%;min-height:0;padding-block:24px;row-gap:22px;align-content:center;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);column-gap:48px}
+.wp-slide-mode body[data-page=landing] .wp-products-why-slide .waterproofing-why h2{font-size:clamp(27px,2.4vw,40px);line-height:1.16}
+.wp-slide-mode .wp-products-why-slide .why-heading .eyebrow{font-size:9px;margin-bottom:12px}
+.wp-slide-mode .wp-products-why-slide .why-story>p{font-size:12px;line-height:1.8}
+.wp-slide-mode .wp-products-why-slide .why-story .text-link{font-size:10px;min-height:35px;margin-top:12px}
+.wp-slide-mode .wp-products-why-slide .waterproofing-metrics{gap:24px}
+.wp-slide-mode .wp-products-why-slide .waterproofing-metrics>div{padding-top:12px}
+.wp-slide-mode .wp-products-why-slide .waterproofing-metrics strong{font-size:clamp(48px,6.6svh,82px);line-height:1.05}
+.wp-slide-mode .wp-products-why-slide .waterproofing-metrics p{font-size:10px;line-height:1.6;margin-top:10px}
+.wp-slide-mode body[data-page=landing] .enquiry-section.enquiry-campaign{min-height:100svh;padding-top:calc(var(--chapter-header,80px) + 40px);padding-bottom:40px}
+.wp-slide-mode body[data-page=landing] .wp-gallery-screen{height:100svh;padding-top:var(--chapter-header,80px)}
+.wp-slide-mode body[data-page=landing] .wp-faq,.wp-slide-mode .site-footer{scroll-snap-align:start;scroll-snap-stop:normal;scroll-margin-top:0!important}
+.wp-slide-mode body[data-page=landing] .wp-faq{padding-top:calc(var(--chapter-header,80px) + 24px)}
+@media(min-height:900px){.wp-slide-mode body[data-page=landing] .wp-products-why-slide .waterproofing-why{padding-block:38px;row-gap:34px}.wp-slide-mode .wp-products-why-slide .why-story>p{font-size:14px}.wp-slide-mode .wp-products-why-slide .waterproofing-metrics p{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html.wp-slide-mode:has(body[data-page=landing]){scroll-snap-type:none!important}}
+
+/* Glide between chapters instead of the browser's magnetic snap correction. */
+html.wp-slide-mode:has(body[data-page=landing]),html.wp-slide-mode.past-docked-chapters:has(body[data-page=landing]){scroll-snap-type:none!important;scroll-behavior:auto!important}
+.wp-slide-mode .journey-section>.section-heading,.wp-slide-mode .wp-products-why-slide :is(.why-heading,.why-story),.wp-slide-mode .enquiry-campaign-inner,.wp-slide-mode .wp-gallery-screen :is(.orbit-heading,.orbit-reel){translate:0 var(--slide-drift,0px)}
+.wp-slide-mode .wp-craft-frame{scale:1.035;transition:scale 1500ms cubic-bezier(.16,1,.3,1)}
+.wp-slide-mode .wp-craft-frame.is-active{scale:1}
+@media(prefers-reduced-motion:reduce){.wp-slide-mode .wp-craft-frame{scale:1;transition:none}}
+html.wp-slide-mode body[data-page=landing] :is(#spaces,#enquiry,#products-why,#waterproofing-range,#why){scroll-margin-top:0!important}
+/* Smaller and shorter screens use free reading scroll, without native magnets. */
+html:has(body[data-page=landing]),html.past-docked-chapters:has(body[data-page=landing]){scroll-snap-type:none!important}
+/* Programmatic chapter focus should not draw a box across a photograph. */
+body[data-page=landing] :is(h1,h2)[tabindex="-1"]:focus{outline:none}
+@media(min-width:1001px){.wp-slide-mode .wp-craft-progress{right:auto;width:min(40%,520px);bottom:42px}}

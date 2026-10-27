@@ -1,0 +1,11 @@
+README.md
+SAKHA-INTEGRATION.md
+package-check.json
+preview.png
+.samvaad-widget-reference.js
+*.zip
+.qa/
+
+.env*
+.gitignore
+.vercel/

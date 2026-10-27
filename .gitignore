@@ -1,0 +1,11 @@
+.vercel/
+.env*
+!.env.example
+.qa/
+package-check.json
+*.zip
+*.log
+*.pid
+__pycache__/
+.DS_Store
+Thumbs.db

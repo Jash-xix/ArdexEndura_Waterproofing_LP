@@ -1,0 +1,6 @@
+{
+  "voiceEmbedUrl": "",
+  "chatEndpoint": "",
+  "status": "preview",
+  "note": "Set an approved embeddable HTTPS Sakhaa voice URL and a same-origin server chat endpoint returning {reply:string}. The voice provider must support iframe embedding and browser microphone access. Never put credentials in this public file. With empty settings, voice stays disconnected and chat uses labelled local sample replies; no lead data is sent."
+}

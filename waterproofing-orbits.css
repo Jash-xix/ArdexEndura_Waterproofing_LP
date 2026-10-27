@@ -1,0 +1,54 @@
+/* Flat, edge-to-edge bands; the pair shares one desktop viewport. */
+.wp-gallery-screen{display:block;scroll-margin-top:var(--chapter-header,80px)}
+body[data-page=landing] .projects-section.wp-projects,body[data-page=landing] .wp-voices.wp-orbit{padding:24px 0 20px;overflow:hidden;position:relative;isolation:isolate;color:#153b36;min-width:0}
+body[data-page=landing] .projects-section.wp-projects{background:#fbfcfa}
+body[data-page=landing] .wp-voices.wp-orbit{background:#e8f1ed}
+.orbit-heading,body[data-page=landing] .wp-voices.wp-orbit .orbit-heading{width:min(1200px,calc(100% - 96px));margin:0 auto 12px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex:none}
+body[data-page=landing] .wp-projects .orbit-heading h2,body[data-page=landing] .wp-voices.wp-orbit .orbit-heading h2{font-size:clamp(24px,2vw,30px);line-height:1.2;letter-spacing:-.025em;margin:0 0 6px;color:#173c37;font-weight:500}
+.orbit-heading p,body[data-page=landing] .wp-voices.wp-orbit .orbit-heading p{font-size:11px;line-height:1.6;color:#4c6b60;margin:0;max-width:65ch}
+.orbit-all-projects{display:inline-flex;align-items:center;gap:15px;font-size:11px;min-height:40px;border-bottom:1px solid #708f81;white-space:nowrap}.orbit-all-projects svg{width:16px;height:16px}
+.wp-orbit .orbit-reel,body[data-page=landing] .wp-voices.wp-orbit .orbit-reel{--orbit-width:clamp(245px,23vw,330px);display:grid;grid-auto-flow:column;grid-auto-columns:var(--orbit-width);gap:18px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 0 4px;scroll-padding-inline:0;outline-offset:-3px;min-height:0}
+body[data-page=landing] .wp-voices.wp-orbit .orbit-reel{--orbit-width:clamp(340px,29vw,420px)}
+.orbit-reel::-webkit-scrollbar{display:none}.wp-orbit .orbit-reel.is-auto-reel{display:block;overflow:hidden;touch-action:pan-y;scroll-snap-type:none;cursor:grab}.wp-orbit .orbit-reel.is-dragging{cursor:grabbing}
+.orbit-track{display:grid;grid-auto-flow:column;grid-auto-columns:inherit;column-gap:inherit;width:100%;height:100%;will-change:transform}
+.orbit-card{min-width:0;transform:none!important;scroll-snap-align:center}
+.wp-projects-card{height:250px;position:relative;border-radius:14px;overflow:hidden;margin:0;background:#15483f}
+.wp-projects-card-link{display:block;width:100%;height:100%;position:relative;color:#fff}
+.wp-projects-card-link>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;pointer-events:none}
+.wp-projects-card-link:after{content:"";position:absolute;inset:24% 0 0;background:linear-gradient(transparent,#061e1b99 38%,#061e1bf2);pointer-events:none}
+.wp-projects-caption{position:absolute;z-index:1;left:20px;right:20px;bottom:17px;display:block}
+.wp-projects-caption>span{display:block}.wp-projects-year{font-size:9px;line-height:1.5;color:#d0e7dd;margin-bottom:5px}.wp-projects-caption strong{display:block;font-size:21px;line-height:1.15;font-weight:500;letter-spacing:-.025em;margin-bottom:6px}
+.wp-projects-place{font-size:10px;line-height:1.5;color:#dcece5}.wp-projects-caption .wp-projects-view{display:flex;align-items:center;justify-content:space-between;font-size:10px;margin-top:10px;border-top:1px solid #ffffff45;padding-top:8px;color:#fff}.wp-projects-view svg{width:15px;height:15px}
+.wp-projects-card-link:focus-visible{outline:3px solid #68deda;outline-offset:-5px;border-radius:14px}
+body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card{height:255px;min-height:0;display:flex;flex-direction:column;margin:0;padding:20px 23px;border-radius:14px;background:#fff;color:#173d36}
+body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card::after{display:none}
+body[data-page=landing] .wp-voices.wp-orbit .wp-voices-area{font-size:10px;color:#00717a;margin-bottom:10px}
+body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card blockquote{flex:1;margin:0 0 14px}
+body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card blockquote p{font-size:13px;line-height:1.7;color:#284d42;margin:0}
+body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card figcaption{display:flex;align-items:center;gap:10px;padding-top:11px;border-top:1px solid #e2eae4}
+body[data-page=landing] .wp-voices.wp-orbit .wp-voices-avatar{display:block;width:36px;height:36px;flex:none;border-radius:50%;background-image:url('/assets/waterproofing/review-portraits/portraits.webp');background-size:500% 200%;background-position:var(--avatar-x) var(--avatar-y);background-repeat:no-repeat}
+body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card figcaption strong{font-size:12px;line-height:1.4;margin-bottom:3px}body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card figcaption>span>span{font-size:10px;line-height:1.5;color:#5a7568}
+.wp-orbit a:focus-visible,.wp-orbit .orbit-reel:focus-visible{outline:2px solid #00747c;outline-offset:3px}
+@media(min-width:1001px) and (min-height:650px){
+ .wp-gallery-screen{height:calc(100svh - var(--chapter-header,80px));display:grid;grid-template-rows:minmax(0,.47fr) minmax(0,.53fr)}
+ body[data-page=landing] .wp-gallery-screen :is(.projects-section.wp-projects,.wp-voices.wp-orbit){display:flex;flex-direction:column;justify-content:center;min-height:0;padding-block:18px 16px}
+ .wp-gallery-screen .orbit-reel,body[data-page=landing] .wp-gallery-screen .wp-voices.wp-orbit .orbit-reel{flex:1;max-height:320px}
+ .wp-gallery-screen .wp-projects-card,body[data-page=landing] .wp-gallery-screen .wp-voices.wp-orbit .wp-voices-card{height:100%}
+}
+@media(max-width:1000px){.orbit-heading,body[data-page=landing] .wp-voices.wp-orbit .orbit-heading{width:calc(100% - 48px)}.wp-projects-card{height:230px}}
+@media(max-width:650px){body[data-page=landing] .projects-section.wp-projects,body[data-page=landing] .wp-voices.wp-orbit{padding-block:28px 24px}.orbit-heading,body[data-page=landing] .wp-voices.wp-orbit .orbit-heading{gap:15px;align-items:flex-start}.orbit-all-projects{font-size:10px;gap:8px}.wp-orbit .orbit-reel{--orbit-width:76vw;gap:16px}body[data-page=landing] .wp-voices.wp-orbit .orbit-reel{--orbit-width:88vw;gap:16px}.wp-projects-card{height:230px}body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card{height:295px;padding:20px}body[data-page=landing] .wp-voices.wp-orbit .wp-voices-card blockquote p{font-size:14px;line-height:1.65}}
+
+/* The enquiry and the two gallery rows each dock as a complete desktop screen. */
+body[data-page=landing] .wp-voices.wp-orbit{background:#153b36;color:#eff8f5}
+body[data-page=landing] .wp-voices.wp-orbit .orbit-heading h2{color:#f3fbf7}
+body[data-page=landing] .wp-voices.wp-orbit .orbit-heading p{color:#c5dcd0}
+@media(min-width:1001px) and (min-height:650px){
+ html:has(body[data-page=landing]).past-docked-chapters{scroll-snap-type:y proximity}
+ body[data-page=landing] .enquiry-section.enquiry-campaign{display:flex;align-items:center;min-height:100svh;padding-top:calc(var(--chapter-header,80px) + 40px);padding-bottom:40px;scroll-snap-align:start;scroll-snap-stop:always;scroll-margin-top:0!important}
+ body[data-page=landing] .wp-gallery-screen{height:100svh;padding-top:var(--chapter-header,80px);background:#fbfcfa;scroll-snap-align:start;scroll-snap-stop:always;scroll-margin-top:0!important}
+}
+@media(prefers-reduced-motion:reduce){html:has(body[data-page=landing]).past-docked-chapters{scroll-snap-type:none}}
+@media(min-width:1001px) and (min-height:650px){
+ body[data-page=landing] .enquiry-section.enquiry-campaign{min-height:calc(100svh - var(--chapter-header,80px));padding-top:60px;scroll-margin-top:var(--chapter-header,80px)!important}
+ body[data-page=landing] .wp-gallery-screen{height:calc(100svh - var(--chapter-header,80px));padding-top:0;scroll-margin-top:var(--chapter-header,80px)!important}
+}

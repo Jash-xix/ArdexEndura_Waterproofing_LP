@@ -1,0 +1,107 @@
+/* Six tangible service moments, composed inside the approved expanding tiles. */
+.service-scene{position:relative;width:100%;max-width:540px;aspect-ratio:1.03;container-type:inline-size;color:#214d40;flex:none}
+.service-scene strong{font-weight:500;letter-spacing:-.025em;line-height:1.25}
+.service-scene svg{width:4cqw;height:4cqw;flex:none;stroke-width:1.5}
+.scene-surface{background:#fffef8;border-radius:2.5cqw;box-shadow:0 3cqw 6cqw #123d301a}
+.scene-brand{display:block;width:33%;height:auto;margin-bottom:6cqw}
+.scene-document-label{display:block;font-size:2.3cqw;letter-spacing:.08em;color:#527666;line-height:1.5}
+.scene-document-foot{display:block;font-size:2.5cqw;margin-top:4cqw;color:#527666}
+.scene-call{position:absolute;inset:3% 5% 17% 8%;padding:7cqw;transform:rotate(-5deg);text-align:center}
+.scene-call .scene-brand{margin:0 auto 7cqw;width:40%}
+.scene-call-symbol{display:grid;place-items:center;width:17cqw;height:17cqw;margin:0 auto 5cqw;border-radius:50%;background:#d4e8d7;color:#256751}
+.scene-call-symbol svg{width:7cqw;height:7cqw}
+.scene-call strong{display:block;font-size:6cqw}.scene-call>span:last-child{display:block;font-size:2.7cqw;margin-top:3cqw;color:#527666}
+.scene-wave{display:flex;align-items:center;justify-content:center;gap:1.1cqw;height:9cqw;margin-top:4cqw}
+.scene-wave i{width:1cqw;height:25%;background:#3d9077;border-radius:2px;transform-origin:center}
+.scene-wave i:nth-child(3n){height:65%}.scene-wave i:nth-child(4n){height:90%}.scene-wave i:nth-child(5n){height:45%}
+.scene-contact-strip{position:absolute;left:0;right:0;bottom:5%;display:flex;gap:3cqw;justify-content:center;transform:rotate(3deg)}
+.scene-contact-strip span{display:flex;align-items:center;gap:3cqw;padding:4cqw 5cqw;background:#c0dcc7;border-radius:2cqw;font-size:3cqw;box-shadow:0 2cqw 3cqw #164b2e0b}
+.scene-phone{position:absolute;inset:0 12% 3% 18%;background:#f9fcf4;border:1.6cqw solid #284e43;border-radius:8cqw;transform:rotate(-6deg);padding:9cqw 3cqw 4cqw;box-shadow:0 4cqw 7cqw #193d2b22}
+.scene-phone-camera{position:absolute;width:18%;height:1.3cqw;border-radius:9px;background:#284e43;top:3cqw;left:41%}
+.scene-phone-header{display:flex;align-items:center;gap:2cqw;padding-bottom:4cqw;border-bottom:1px solid #c7d8c9;font-size:2.7cqw}
+.scene-message{font-size:2.4cqw;line-height:1.65;padding:3cqw;border-radius:2cqw;background:#e1eddd;margin-top:3cqw}
+.scene-photo-message{margin-right:5cqw;background:#d7e6d1}.scene-photo-message img{width:100%;height:24cqw;object-fit:cover;border-radius:1cqw;margin-bottom:2cqw}
+.scene-reply{margin-left:6cqw;background:#c8e2c2}.scene-location{display:flex;align-items:center;gap:2cqw;margin:3cqw 0 0 4cqw;padding:3cqw;background:#e1eddd;border-radius:2cqw;font-size:2.2cqw;line-height:1.6}.scene-location svg{width:3cqw;height:3cqw}
+.scene-photo-tab{position:absolute;width:32%;left:-3%;bottom:8%;padding:2cqw;background:#fffef8;transform:rotate(8deg);box-shadow:0 2cqw 4cqw #204d3620;border-radius:2cqw}
+.scene-photo-tab img{display:block;width:100%;height:28cqw;object-fit:cover;border-radius:1cqw}.scene-photo-tab span{display:block;font-size:2.1cqw;line-height:1.5;margin-top:2cqw}
+.scene-site-photo{position:absolute;inset:2% 1% 37% 3%;transform:rotate(-5deg);border-radius:3cqw;overflow:hidden;box-shadow:0 3cqw 6cqw #214d4020}
+.scene-site-photo>img{width:100%;height:100%;object-fit:cover}.scene-site-photo:after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#173b35a8)}
+.scene-photo-caption{position:absolute;bottom:5cqw;left:5cqw;font-size:3cqw;color:#fff;z-index:2}
+.scene-site-marker{position:absolute;width:10cqw;height:10cqw;border:1px solid #fff;border-radius:50%;z-index:2;box-shadow:0 0 0 1.5cqw #fff2}
+.scene-site-marker:before,.scene-site-marker:after{content:"";position:absolute;background:#fff;inset:50% 35%;height:1px}.scene-site-marker:after{transform:rotate(90deg)}
+.marker-one{top:36%;left:25%}.marker-two{top:23%;right:18%}
+.scene-inspection{position:absolute;left:17%;right:0;bottom:3%;padding:5cqw;transform:rotate(4deg)}
+.scene-inspection strong{display:block;font-size:5.7cqw;margin:2cqw 0 4cqw}.scene-inspection>div,.scene-handover-paper>div{display:flex;align-items:center;gap:3cqw;padding:2.6cqw 0;border-bottom:1px solid #d8e3d5;font-size:2.8cqw}.scene-inspection svg,.scene-handover-paper svg{color:#387d5c;width:3.3cqw;height:3.3cqw}
+.scene-quote-under{position:absolute;inset:12% 8% 7% 12%;background:#a7c0ad;border-radius:2.5cqw;transform:rotate(5deg);box-shadow:0 4cqw 7cqw #09281f25}
+.scene-quote-paper{position:absolute;inset:4% 5% 7% 8%;padding:6cqw;transform:rotate(-5deg)}
+.scene-quote-paper .scene-brand{width:37%;margin-bottom:6cqw}.scene-quote-paper strong{display:block;font-size:5.7cqw;margin-bottom:2cqw}.scene-quote-paper>.scene-document-label{margin-bottom:5cqw}
+.scene-quote-paper>div{display:flex;align-items:center;justify-content:space-between;gap:3cqw;padding:3cqw 0;border-bottom:1px solid #dbe4d7;font-size:2.7cqw}.scene-quote-paper i{height:1px;width:20%;background:#a9c4ae}
+.scene-quote-approval{display:flex;align-items:center;gap:2cqw;font-size:2.5cqw;background:#e4efdf;border-radius:1.5cqw;padding:3cqw;margin-top:5cqw;color:#386d4a}
+.scene-materials{aspect-ratio:1.15;max-width:650px}
+.service-product-group{position:absolute;inset:0 0 12%;isolation:isolate}
+.service-product-ground{position:absolute;bottom:2%;left:0;width:100%;height:10%;background:radial-gradient(ellipse,#183e362b,transparent 65%);transform:scaleY(.5)}
+.service-pack{position:absolute;display:block;height:64%;aspect-ratio:var(--product-ratio);bottom:6%;transform:translateX(-50%);transform-origin:50% 100%;filter:drop-shadow(0 1cqw 1.1cqw #143d3612)}
+.service-pack-art{position:relative;display:block;overflow:hidden;width:100%;height:100%;mix-blend-mode:multiply}
+.service-pack-art img{position:absolute;max-width:none;object-fit:fill}
+.service-pack-1{left:15%;height:62%;z-index:1;bottom:11%}.service-pack-2{left:33%;height:70%;z-index:3;bottom:7%}.service-pack-3{left:51%;height:80%;z-index:5;bottom:4%}.service-pack-4{left:70%;height:65%;z-index:4;bottom:7%}.service-pack-5{left:85%;height:57%;z-index:2;bottom:10%}
+.scene-material-caption{position:absolute;bottom:2%;left:0;right:0;text-align:center;font-size:2.7cqw;color:#41684d}
+.scene-progress-photo{position:absolute;inset:2% 8% 35% 0;transform:rotate(-5deg);overflow:hidden;border-radius:3cqw;box-shadow:0 3cqw 5cqw #173d3624}
+.scene-progress-photo>img{width:100%;height:100%;object-fit:cover;object-position:64% center}.scene-progress-photo>span{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:2.5cqw;padding:3.5cqw;background:#153d38d9;color:#fff;font-size:2.7cqw}
+.scene-handover-paper{position:absolute;left:13%;right:0;bottom:3%;padding:5cqw;transform:rotate(4deg)}
+.scene-handover-paper strong{display:block;font-size:5cqw;margin:2cqw 0 3cqw;max-width:13ch}.scene-completion-mark{position:absolute;right:-1%;top:0;display:grid;place-items:center;width:16cqw;height:16cqw;border-radius:50%;background:#245e4b;color:#fff;border:1.5cqw solid #b9dace;box-shadow:0 2cqw 3cqw #214d4020}.scene-completion-mark svg{width:7cqw;height:7cqw}
+.service-story.is-deck:not(.has-focus) .service-tile-art{top:7%;right:9%;width:73%;height:59%}
+.service-story.is-deck:not(.has-focus) .service-scene{max-width:230px;width:min(100%,23vh)}
+.service-story.is-deck:not(.has-focus) .scene-materials{width:110%;max-width:310px}
+.service-story.has-focus .service-tile.is-focused .service-tile-art{width:45%;right:3%;top:7%;height:86%}
+.service-story.has-focus .service-tile-5.is-focused .service-tile-art{width:50%;right:1%}
+.service-story.has-focus .service-tile-5.is-focused .service-tile-copy{width:42%}
+.service-story.has-focus .service-tile-detail p{font-size:clamp(13px,1.05vw,16px)}
+.service-story.has-focus .service-tile-detail li{font-size:clamp(11px,.85vw,13px)}
+.service-flying-pack{position:fixed;left:0;top:0;z-index:55;pointer-events:none;transform-origin:top left;will-change:transform;overflow:hidden;mix-blend-mode:normal;opacity:1;isolation:isolate;contain:layout style}
+.service-flying-pack img{position:absolute;max-width:none;object-fit:fill;pointer-events:none}
+.service-pack.is-handoff-source .service-pack-art,.range-featured-pack.is-handoff-destination .range-featured-art{visibility:hidden}
+.has-product-handoff .range-featured-pack{transform:translateX(-50%)!important;transition:none}
+@media(min-width:1600px){.service-story.has-focus .service-scene{max-width:590px}.service-story.has-focus .scene-materials{max-width:720px}}
+@media(max-width:650px){.service-story.is-deck:not(.has-focus) .service-tile-art{top:7%;right:5%;width:77%;height:51%}.service-story.is-deck:not(.has-focus) .service-scene{width:min(100%,17vh)}.service-story.is-deck:not(.has-focus) .scene-materials{width:112%}.service-story.has-focus .service-tile.is-focused .service-tile-art,.service-story.has-focus .service-tile-5.is-focused .service-tile-art{width:78%;right:11%;top:26px;height:43%}.service-story.has-focus .service-scene{width:min(100%,30vh)}.service-story.has-focus .scene-materials{width:110%;max-width:none}.service-story.has-focus .service-tile-5.is-focused .service-tile-copy{width:auto}.service-story.has-focus .service-tile-detail p{font-size:12px}.service-story.has-focus .service-tile-detail li{font-size:10px}}
+@media(max-height:650px) and (max-width:650px){.service-story.has-focus .service-tile.is-focused .service-tile-art,.service-story.has-focus .service-tile-5.is-focused .service-tile-art{top:14px;right:6%;width:58%;height:28%;transform:none}.service-story.has-focus .service-scene{width:min(100%,22vh)}.service-story.has-focus .scene-materials{width:100%}.service-story.has-focus .service-tile-detail p{font-size:11px}.service-story.has-focus .service-tile-detail li{font-size:9px}.service-story.is-deck:not(.has-focus) .service-tile-art{height:50%;top:5%}}
+@media(prefers-reduced-motion:reduce){.service-flying-pack{display:none}.service-pack.is-handoff-source .service-pack-art,.range-featured-pack.is-handoff-destination .range-featured-art{visibility:visible}}
+/* Keep the portrait grounded; let the board breathe beside the utility dock. */
+@media(min-width:651px){.service-deck-stage{padding-right:clamp(88px,6vw,128px)}.service-deck-layout{grid-template-columns:minmax(0,.27fr) minmax(0,.73fr)}.service-story.is-deck .service-deck-board{height:calc(100% - clamp(56px,7.5vh,88px))}.service-deck-actions{padding-right:0}.service-story.is-deck:not(.has-focus) .service-tile-art{height:56%;top:5%}}
+@media(max-width:650px){.service-story.is-deck .service-deck-board{height:calc(100% - 32px)}}
+/* Material-led thumbnails: one clear object, with an architectural neutral palette. */
+.service-story{background:#ecefeb;color:#193b3d}
+.service-tile{color:#193b3d}.service-tile-1{background:#fbfcfa}.service-tile-2{background:#e1e9eb}.service-tile-3{background:#f7f7f3}.service-tile-4{background:#173b40;color:#f4f7f4}.service-tile-5{background:#f0f1e9}.service-tile-6{background:#e1e8e7}
+.scene-cutout{aspect-ratio:1;max-width:600px;display:flex;align-items:center;justify-content:center}
+.scene-cutout>img{display:block;width:100%;height:100%;object-fit:contain;max-width:none;mix-blend-mode:normal;opacity:1}
+.cutout-site-details>img{width:100%;height:105%}
+.cutout-project-quote>img{width:96%;height:96%}
+.scene-call{inset:5% 8%;transform:rotate(-3deg);background:#fff;box-shadow:0 2cqw 5cqw #193b3d15}
+.scene-call-symbol{background:#d7eef0;color:#007c88}.scene-wave i{background:#008894}
+.scene-call strong{color:#173b40}.scene-call>span:last-child{color:#507174}
+.service-story.is-deck:not(.has-focus) .service-tile-art{width:78%;right:8%;height:60%;top:2%}
+.service-story.is-deck:not(.has-focus) .service-scene{width:min(100%,25vh);max-width:290px}
+.service-story.is-deck:not(.has-focus) .scene-materials{width:112%;max-width:360px}
+.service-story.is-deck:not(.has-focus) .cutout-site-assessment{width:min(100%,25vh)}
+.service-story.has-focus .scene-cutout{width:min(100%,56vh);max-width:620px}
+.service-story.has-focus .cutout-site-details{width:min(100%,51vh)}
+@media(max-width:650px){.service-story.is-deck:not(.has-focus) .service-tile-art{top:3%;right:7%;width:80%;height:54%}.service-story.is-deck:not(.has-focus) .service-scene{width:min(100%,17vh)}.service-story.is-deck:not(.has-focus) .scene-materials{width:110%}.service-story.has-focus .scene-cutout{width:min(100%,31vh)}.service-story.has-focus .cutout-site-details{width:min(100%,27vh)}}
+@media(max-height:650px) and (max-width:650px){.service-story.has-focus .scene-cutout{width:min(100%,21vh)}.service-story.has-focus .cutout-site-details{width:min(100%,19vh)}}
+.service-tile-4 .service-tile-open:focus-visible{outline-color:#6be0e4}
+/* A common optical centre above the copy, independent of each object's shape. */
+.service-story.is-deck:not(.has-focus) .service-tile-art{top:11%;height:58%;right:8%;width:78%}
+.service-story.is-deck:not(.has-focus) .scene-materials{width:96%;max-width:310px}
+.scene-material-caption{display:none}
+.service-product-group{translate:0 4%}
+.service-story.has-focus .service-tile-5.is-focused .service-tile-art{width:45%;right:3%}
+.service-story.has-focus .scene-materials{width:100%;max-width:580px}
+@media(max-width:650px){.service-story.is-deck:not(.has-focus) .service-tile-art{top:10%;height:54%}.service-story.is-deck:not(.has-focus) .scene-materials{width:96%;max-width:200px}.service-story.has-focus .service-tile-5.is-focused .service-tile-art{width:78%;right:11%;top:26px;height:43%}.service-story.has-focus .scene-materials{width:100%;max-width:300px}}
+@media(max-height:650px) and (max-width:650px){.service-story.is-deck:not(.has-focus) .service-tile-art{top:8%;height:50%}.service-story.has-focus .service-tile-5.is-focused .service-tile-art{top:14px;right:6%;width:58%;height:28%}.service-story.has-focus .scene-materials{max-width:180px}}
+/* ARDEX's existing cyan, teal and deep green; no introduced navy palette. */
+.service-story{background:linear-gradient(120deg,#fbfcfa 0%,#f1f5f1 70%,#def3ed 100%)}
+.service-story .service-tile{background:radial-gradient(ellipse at 100% 0%,rgba(45,204,211,.58),rgba(45,204,211,0) 65%),linear-gradient(145deg,#00646b 0%,#153b36 100%);color:#f4fbfb}
+.service-story .service-tile-number{opacity:.9}
+.service-story.is-deck .service-tile-copy>.service-tile-summary,.service-story .service-tile-detail li{opacity:1;color:#f0f7f7}
+.service-story .service-tile-open:focus-visible{outline-color:#8af2f4}
+.service-pack-art{mix-blend-mode:normal}
+.scene-call-symbol{background:#d2f4f1;color:#00646b}.scene-wave i{background:#2dccd3}
+@media(max-width:650px){.service-story.is-deck .service-deck-board{height:calc(100% - 80px)}}

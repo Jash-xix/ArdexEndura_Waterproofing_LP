@@ -1,0 +1,21 @@
+/* Preserve the full-screen balcony comparison; refine its copy group and controls. */
+body[data-page=landing] .comparison-hero{height:calc(100svh - var(--chapter-header,88px))!important;min-height:530px;display:flex;flex-direction:column;scroll-snap-align:none;background:#172c2b;color:#fff}
+body[data-page=landing] .comparison-hero .comparison-stage{flex:1 1 0;min-height:0;height:100%;max-height:none;touch-action:pan-y}
+.comparison-hero .comparison-shade{background:linear-gradient(90deg,rgba(4,25,22,.83),rgba(4,25,22,.48) 34%,rgba(4,25,22,.05) 67%)}
+.waterproofing-hero-intro{position:absolute;z-index:3;top:clamp(70px,15vh,170px);left:var(--gutter);width:calc(50% - var(--gutter) - 30px);max-width:760px;pointer-events:none}
+.waterproofing-hero-intro h1{font-size:clamp(38px,4vw,76px);font-weight:500;letter-spacing:-.035em;line-height:1.08;margin:0 0 25px;color:#fff;text-wrap:initial}
+.waterproofing-hero-intro h1 em{font-style:normal;color:#66e5e9}
+.waterproofing-hero-action{display:flex;flex-direction:column;align-items:flex-start;gap:25px;max-width:440px}
+.waterproofing-hero-action p{font-size:16px;line-height:1.7;margin:0;color:#fff;max-width:37ch}
+.waterproofing-hero-action .button{pointer-events:auto;min-height:54px;gap:36px;padding:14px 24px;background:#2dccd3;color:#072f32;border-radius:3px;box-shadow:none;font-size:13px;font-weight:600;transition:background 180ms ease,transform 180ms ease}
+.waterproofing-hero-action .button:hover{background:#7de4e7;transform:translateY(-2px)}
+.waterproofing-hero-action .button:active{transform:translateY(0)}
+.waterproofing-hero-action .button:focus-visible{outline:3px solid #fff;outline-offset:5px}
+body[data-page=landing] .comparison-hero .comparison-base img,body[data-page=landing] .comparison-hero .comparison-before img{object-position:50% 57%;transform:none}
+.comparison-hero .comparison-divider>span{top:62%;background:#fff;border-radius:4px;opacity:0;transition:opacity 160ms ease-out}
+.comparison-hero .is-pointer-moving .comparison-divider>span,.comparison-hero .comparison-stage:has(#hero-comparison-range:focus-visible) .comparison-divider>span{opacity:1}
+.comparison-hero .comparison-range-label:focus-within{bottom:22px;right:var(--gutter);max-width:calc(100% - 48px);border-radius:3px}
+@media(max-width:900px){.waterproofing-hero-intro{width:calc(60% - var(--gutter));top:12%}.waterproofing-hero-intro h1{font-size:clamp(34px,4.5vw,44px)}.waterproofing-hero-action p{font-size:14px;max-width:33ch}.waterproofing-hero-action{gap:22px}}
+@media(max-width:650px){body[data-page=landing] .comparison-hero{min-height:580px}.waterproofing-hero-intro{top:10%;left:24px;width:calc(100% - 48px);max-width:420px}.waterproofing-hero-intro h1{font-size:clamp(28px,7.6vw,44px);letter-spacing:-.03em;line-height:1.12;margin-bottom:21px}.waterproofing-hero-action{gap:22px;max-width:330px}.waterproofing-hero-action p{font-size:14px;line-height:1.65;max-width:31ch}.waterproofing-hero-action .button{min-height:49px;padding:12px 20px;gap:28px;font-size:12px}.comparison-hero .comparison-divider>span{top:72%;width:20px;height:20px;left:-10px}.comparison-hero .comparison-shade{background:linear-gradient(90deg,rgba(4,25,22,.82),rgba(4,25,22,.4) 78%,rgba(4,25,22,.18))}.comparison-hero .comparison-range-label:focus-within{bottom:20px;right:20px}}
+@media(prefers-reduced-motion:reduce){.comparison-hero .comparison-divider>span{transition:none}.waterproofing-hero-action .button{transition:none}.waterproofing-hero-action .button:hover{transform:none}}
+@media(max-width:360px){body[data-page=landing] .comparison-hero{min-height:530px}.waterproofing-hero-intro h1{font-size:26px}}

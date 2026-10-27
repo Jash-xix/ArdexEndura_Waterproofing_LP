@@ -1,0 +1,12 @@
+/* Full-width surfaces, with one centered reading width for the proof sections. */
+body[data-page=landing] :is(.waterproofing-why,.projects-section,.wp-voices){padding-inline:max(var(--gutter),calc((100% - 1200px)/2));scroll-margin-top:var(--chapter-header,88px)!important}
+@media(min-width:1001px){
+ body[data-page=landing] .waterproofing-why{grid-template-columns:1.65fr 1fr;column-gap:64px}
+ body[data-page=landing] .waterproofing-why .why-heading h2{font-size:clamp(32px,2.5vw,42px)!important}
+ body[data-page=landing] .waterproofing-metrics strong{font-size:clamp(58px,5vw,80px)}
+ body[data-page=landing] .projects-section .section-heading h2{font-size:clamp(34px,3vw,44px)}
+ body[data-page=landing] .projects-section .section-heading>p{max-width:320px}
+}
+@media(max-width:650px){body[data-page=landing] :is(.waterproofing-why,.projects-section,.wp-voices){padding-inline:24px}}
+html[data-reset-start=true]{scroll-snap-type:none!important;overflow-anchor:none!important}
+html[data-reset-start=true] body{overflow-anchor:none!important}

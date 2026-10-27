@@ -1,0 +1,845 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ardex Endura WhatsApp Assistant</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a working WhatsApp phone on the left, the Sakhaa CRM lead card it feeds on the right; stage rail on top. */
+:root{
+  --bg:#edf1f1; --surface:#ffffff; --surface-2:#f6f8f8; --ink:#13242b; --muted:#5a6b71; --line:#d3dcdd;
+  --accent:#0a7f89; --accent-bright:#2cccd3; --accent-soft:#dbf3f4;
+  --wa-head:#0d4c54; --wa-head-ink:#ffffff; --wa-wall:#e8e2d8; --wa-wall-dot:#ddd5c8;
+  --bub-in:#ffffff; --bub-out:#d9fdd3; --bub-ink:#111b21; --bub-meta:#667781; --tick:#53bdeb;
+  --hot:#c2410c; --warm:#a16207; --cold:#3f6684;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Noto Sans","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1618; --surface:#162125; --surface-2:#1b282c; --ink:#e3ecee; --muted:#93a4a9; --line:#2a393d;
+  --accent:#4fd3da; --accent-bright:#2cccd3; --accent-soft:#103a3f;
+  --wa-head:#1f2c33; --wa-head-ink:#e9edef; --wa-wall:#0b141a; --wa-wall-dot:#111d24;
+  --bub-in:#202c33; --bub-out:#005c4b; --bub-ink:#e9edef; --bub-meta:#8696a0; --tick:#53bdeb;
+  --hot:#fb923c; --warm:#facc15; --cold:#8fb5d6; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1618; --surface:#162125; --surface-2:#1b282c; --ink:#e3ecee; --muted:#93a4a9; --line:#2a393d;
+  --accent:#4fd3da; --accent-bright:#2cccd3; --accent-soft:#103a3f;
+  --wa-head:#1f2c33; --wa-head-ink:#e9edef; --wa-wall:#0b141a; --wa-wall-dot:#111d24;
+  --bub-in:#202c33; --bub-out:#005c4b; --bub-ink:#e9edef; --bub-meta:#8696a0; --tick:#53bdeb;
+  --hot:#fb923c; --warm:#facc15; --cold:#8fb5d6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(24px,3.4vw,34px);letter-spacing:-.01em;margin:4px 0 2px;text-wrap:balance}
+.sub{color:var(--muted);max-width:62ch;margin:0}
+.btn{font:600 13px/1 var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 14px;border-radius:999px;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent-bright);outline-offset:2px}
+
+/* stage rail */
+.rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.rail div{border-top:3px solid var(--line);padding-top:7px;font-size:12px;color:var(--muted);transition:border-color .3s,color .3s}
+.rail b{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;font-weight:600}
+.rail div.done{border-color:var(--accent);color:var(--ink)}
+.rail div.now{border-color:var(--accent-bright);color:var(--ink)}
+.rail div.now b{color:var(--accent)}
+
+.stage{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.stage{grid-template-columns:minmax(0,1fr)}.rail span{display:none}}
+.stage.solo{grid-template-columns:minmax(0,390px);justify-content:center}
+
+/* phone */
+.phone{background:var(--surface);border:1px solid var(--line);border-radius:30px;padding:10px;box-shadow:0 18px 40px -24px rgba(10,40,48,.45);width:100%;max-width:390px;margin:0 auto}
+.screen{border-radius:22px;overflow:hidden;display:flex;flex-direction:column;height:min(720px,82vh);min-height:520px;position:relative;background:var(--wa-wall)}
+.wa-head{background:var(--wa-head);color:var(--wa-head-ink);display:flex;align-items:center;gap:10px;padding:12px 12px 11px}
+.avatar{width:38px;height:38px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;border:2px solid var(--accent-bright)}
+.avatar span{font:800 12px/1 var(--f-display);color:#0d4c54;letter-spacing:-.02em}
+.wa-name{font-weight:600;font-size:15px;display:flex;align-items:center;gap:5px}
+.wa-name svg{flex:none}
+.wa-status{font-size:12px;opacity:.8}
+.chat{flex:1;overflow-y:auto;padding:12px 10px 8px;display:flex;flex-direction:column;gap:6px;
+  background-color:var(--wa-wall);background-image:radial-gradient(var(--wa-wall-dot) 1.2px,transparent 1.3px);background-size:18px 18px}
+.daychip{align-self:center;background:var(--bub-in);color:var(--bub-meta);font-size:11.5px;padding:4px 10px;border-radius:8px;margin:2px 0 6px}
+.row{display:flex;flex-direction:column;max-width:86%}
+.row.in{align-self:flex-start}.row.out{align-self:flex-end;align-items:flex-end}
+.bub{background:var(--bub-in);color:var(--bub-ink);padding:7px 9px 6px;border-radius:10px;font-size:14px;white-space:pre-line;box-shadow:0 1px .5px rgba(11,20,26,.13);min-width:0;overflow-wrap:anywhere}
+.row.in .bub{border-top-left-radius:3px}.row.out .bub{background:var(--bub-out);border-top-right-radius:3px}
+.meta{font-size:10.5px;color:var(--bub-meta);text-align:right;margin-top:2px;display:flex;justify-content:flex-end;gap:3px;align-items:center}
+.btns{display:flex;flex-direction:column;gap:3px;margin-top:3px}
+.btns button{background:var(--bub-in);color:var(--accent);border:0;border-radius:8px;padding:9px 10px;font:600 13.5px/1.25 var(--f-body);cursor:pointer;box-shadow:0 1px .5px rgba(11,20,26,.13);text-align:center}
+.btns button:hover:not(:disabled){filter:brightness(.97)}
+.btns button:disabled{cursor:default;opacity:.55}
+.btns button.picked{opacity:1;outline:1.5px solid var(--accent)}
+.listbtn{display:flex;align-items:center;justify-content:center;gap:6px}
+.typing{display:flex;gap:4px;padding:11px 12px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--bub-meta);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.typing i{animation:none;opacity:.6}}
+
+/* product card bubble */
+.pcard{padding:0;overflow:hidden;width:250px;max-width:100%}
+.pimg{height:84px;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 12px;background:linear-gradient(135deg,#0d4c54,#0a7f89);color:#fff;position:relative}
+.pimg.wp{background:linear-gradient(135deg,#0b3d63,#1d77a8)}
+.pimg.gr{background:linear-gradient(135deg,#44403c,#78716c)}
+.pimg.cr{background:linear-gradient(135deg,#3f5b3a,#6b8f5e)}
+.pimg.fl{background:linear-gradient(135deg,#3b3f58,#62678d)}
+.pimg .bag{position:absolute;right:14px;top:10px;width:46px;height:62px;border-radius:5px 5px 8px 8px;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.pimg .bag span{font:800 8px/1.1 var(--f-display);color:#0d4c54;text-align:center;letter-spacing:.02em}
+.pimg .cat{font:600 10px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+.pbody{padding:8px 10px 6px}
+.pname{font:800 14.5px/1.15 var(--f-display);letter-spacing:.01em}
+.pdesc{font-size:13px;margin-top:3px}
+.photo{width:190px;height:120px;border-radius:7px;background:radial-gradient(ellipse at 55% 45%,#8d8572 0 18%,#b3ab97 30%,#d8d2c4 55%,#ece8de 100%);position:relative}
+.photo::after{content:"";position:absolute;inset:auto 12px 10px 12px;height:2px;background:rgba(0,0,0,.08)}
+
+/* composer */
+.composer{display:flex;gap:6px;padding:7px 8px;background:var(--wa-wall);align-items:center}
+.composer input{flex:1;min-width:0;border:0;border-radius:22px;padding:11px 14px;font:14px var(--f-body);background:var(--bub-in);color:var(--bub-ink)}
+.composer input::placeholder{color:var(--bub-meta)}
+.send{width:42px;height:42px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.hint{font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px}
+
+/* list sheet */
+.sheet{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;z-index:5}
+.sheet-in{background:var(--bub-in);color:var(--bub-ink);width:100%;border-radius:16px 16px 0 0;padding:6px 0 10px;max-height:78%;overflow:auto}
+.sheet-h{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 8px;font-weight:600;border-bottom:1px solid var(--line)}
+.sheet-h button{background:none;border:0;color:var(--bub-meta);font-size:20px;line-height:1;cursor:pointer;padding:2px 6px}
+.sheet-in ul{list-style:none;margin:0;padding:0}
+.sheet-in li button{width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:13px 16px;font:500 14px/1.3 var(--f-body);color:var(--bub-ink);cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.sheet-in li button:hover{background:var(--surface-2)}
+.sheet-in li button::after{content:"";width:16px;height:16px;border-radius:50%;border:2px solid var(--bub-meta);flex:none}
+
+/* CRM panel */
+.panel{display:flex;flex-direction:column;gap:16px;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.card-h h2{font:800 15px/1.2 var(--f-display);margin:0;letter-spacing:.01em}
+.card-h small{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.score{display:flex;gap:16px;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}
+.pill{font:700 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border-radius:999px;border:1.5px solid currentColor}
+.pill.hot{color:var(--hot)}.pill.warm{color:var(--warm)}.pill.cold{color:var(--cold)}.pill.none{color:var(--muted)}
+.kv{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kv span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.kv strong{font-size:14px;font-weight:600}
+.meter{flex:1;min-width:120px}
+.meter .track{height:6px;background:var(--surface-2);border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.meter .fill{height:100%;background:var(--accent);width:0;transition:width .4s}
+dl.fields{display:grid;grid-template-columns:minmax(110px,auto) minmax(0,1fr);margin:0;padding:6px 16px 12px}
+dl.fields dt,dl.fields dd{padding:8px 0;border-bottom:1px dashed var(--line);margin:0}
+dl.fields dt{font-size:12px;color:var(--muted);padding-right:12px}
+dl.fields dd{font-family:var(--f-mono);font-size:12.5px;overflow-wrap:anywhere}
+dl.fields dd.empty{color:var(--muted)}
+dl.fields dd.flash{animation:flash 1s}
+@keyframes flash{0%{background:var(--accent-soft)}100%{background:transparent}}
+@media (prefers-reduced-motion:reduce){dl.fields dd.flash{animation:none}}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-family:var(--f-mono);font-size:11px;background:var(--accent-soft);color:var(--ink);padding:3px 7px;border-radius:5px}
+.leads{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+td.mono{font-family:var(--f-mono)}
+.empty-row td{color:var(--muted);white-space:normal}
+.note{font-size:12.5px;color:var(--muted);max-width:70ch;margin:0}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">CHLEAR × Sakhaa · WhatsApp prototype</div>
+      <h1>Ardex Endura WhatsApp Assistant</h1>
+      <p class="sub">One number for every Ardex customer. The bot learns who is writing, finds what they need, matches the right product, and hands a scored lead to the right team.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="togglecip" type="button" aria-pressed="true">Show Sakhaa CIP</button><button class="btn" id="restart" type="button">Restart chat</button></div>
+  </header>
+
+  <div class="rail" id="rail" aria-label="Conversation stage">
+    <div data-p="1"><b>01 · PROFILE</b><span>Who is writing</span></div>
+    <div data-p="2"><b>02 · REQUIREMENT</b><span>What they need</span></div>
+    <div data-p="3"><b>03 · GUIDED QUESTIONS</b><span>Area, surface, condition</span></div>
+    <div data-p="4"><b>04 · PRODUCT MATCH</b><span>Right Ardex system</span></div>
+    <div data-p="5"><b>05 · LEAD CAPTURED</b><span>Scored and routed</span></div>
+  </div>
+
+  <div class="stage solo" id="stage">
+    <div>
+      <div class="phone">
+        <div class="screen" id="screen">
+          <div class="wa-head">
+            <div class="avatar" aria-hidden="true"><span>ARDEX<br>ENDURA</span></div>
+            <div style="min-width:0">
+              <div class="wa-name">ARDEX ENDURA
+                <svg width="15" height="15" viewBox="0 0 24 24" aria-label="Verified business"><path fill="#25d366" d="M12 1l2.7 2.2 3.5-.3.9 3.4 3 1.9-1.3 3.3 1.3 3.3-3 1.9-.9 3.4-3.5-.3L12 23l-2.7-2.2-3.5.3-.9-3.4-3-1.9L3.2 12 1.9 8.7l3-1.9.9-3.4 3.5.3z"/><path fill="#fff" d="M10.4 15.6l-3.2-3.2 1.4-1.4 1.8 1.8 4.9-4.9 1.4 1.4z"/></svg>
+              </div>
+              <div class="wa-status" id="wastatus">Business account</div>
+            </div>
+          </div>
+          <div class="chat" id="chat" aria-live="polite"></div>
+          <form class="composer" id="composer" autocomplete="off">
+            <input id="msg" type="text" placeholder="Type a message" aria-label="Message">
+            <button class="send" type="submit" aria-label="Send"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+          </form>
+        </div>
+      </div>
+      <p class="hint">Tap the replies, or type: “leak”, “tile”, “price”, “dealer”, “menu”.</p>
+    </div>
+
+    <div class="panel" id="panel" hidden>
+      <section class="card" aria-labelledby="leadh">
+        <div class="card-h"><h2 id="leadh">Sakhaa CIP · Live lead</h2><small id="refline">Ref pending</small></div>
+        <div class="score">
+          <div class="kv"><span>Lead score</span><strong><span class="pill none" id="pill">Not scored</span></strong></div>
+          <div class="kv meter"><span>Profile completeness</span><div class="track"><div class="fill" id="fill"></div></div></div>
+          <div class="kv"><span>Route to</span><strong id="route">—</strong></div>
+        </div>
+        <dl class="fields" id="fields"></dl>
+      </section>
+
+      <section class="card" aria-labelledby="listh">
+        <div class="card-h"><h2 id="listh">Captured leads</h2><button class="btn" id="clear" type="button">Clear</button></div>
+        <div class="leads"><table><thead><tr><th>Ref</th><th>Name</th><th>Profile</th><th>Need</th><th>City</th><th>Score</th><th>Route</th></tr></thead><tbody id="leadrows"></tbody></table></div>
+      </section>
+      <p class="note">Product picks are indicative and drawn from the ARDEX ENDURA range; the Ardex technical team signs off the final system per site. Leads here stay in this browser only.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait = ms => new Promise(r => setTimeout(r, reduce ? 60 : ms));
+const $ = id => document.getElementById(id);
+const chat = $('chat'), screen = $('screen');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- products ---------- */
+const CAT = {
+  ad:{en:'Tile adhesive',hi:'टाइल एडहेसिव',cls:''},
+  gr:{en:'Tile grout',hi:'टाइल ग्राउट',cls:'gr'},
+  wp:{en:'Waterproofing',hi:'वॉटरप्रूफ़िंग',cls:'wp'},
+  cr:{en:'Tile & stone care',hi:'टाइल और स्टोन केयर',cls:'cr'},
+  fl:{en:'Flooring & repair',hi:'फ़्लोरिंग और रिपेयर',cls:'fl'}
+};
+const P = {
+  silver:{n:'SILVER STAR',c:'ad',en:'Polymer-modified adhesive for fixing tiles on interior walls and floors.',hi:'अंदर की दीवारों और फ़र्श पर टाइल लगाने के लिए पॉलिमर-मॉडिफ़ाइड एडहेसिव।'},
+  silverplus:{n:'SILVER STAR PLUS',c:'ad',en:'High-polymer adhesive for medium-format tiles and stone: interior walls and floors, exterior floors.',hi:'मीडियम साइज़ टाइल और पत्थर के लिए: अंदर की दीवार और फ़र्श, बाहर का फ़र्श।'},
+  gold:{n:'GOLD STAR',c:'ad',en:'High-polymer adhesive for tiles and stone, interior and exterior.',hi:'टाइल और पत्थर के लिए हाई-पॉलिमर एडहेसिव, अंदर और बाहर दोनों जगह।'},
+  white:{n:'WHITE STAR',c:'ad',en:'White cement-based adhesive for light-coloured marble, stone and tiles.',hi:'हल्के रंग के मार्बल, पत्थर और टाइल के लिए सफ़ेद सीमेंट-बेस्ड एडहेसिव।'},
+  diamond:{n:'DIAMOND STAR',c:'ad',en:'High-performance adhesive, specially for glass mosaics and natural stone.',hi:'हाई-परफ़ॉर्मेंस एडहेसिव, ख़ासकर ग्लास मोज़ेक और नेचुरल स्टोन के लिए।'},
+  platinum:{n:'PLATINUM STAR',c:'ad',en:'Special adhesive for difficult surfaces: existing tiles, plywood and metal.',hi:'मुश्किल सतहों के लिए: पुरानी टाइल, प्लाईवुड और मेटल।'},
+  ardiflex:{n:'ARDIFLEX S1',c:'ad',en:'Fibre-reinforced, deformable adhesive for demanding jobs like large tiles on outside walls.',hi:'फ़ाइबर वाला, लचीला एडहेसिव, जैसे बाहर की दीवार पर बड़ी टाइल।'},
+  epoxy:{n:'EPOXY TILE GROUT',c:'gr',en:'Resin-based joint grout for wet and hygiene-critical areas. Comes in a range of shades.',hi:'बाथरूम-किचन जैसी गीली जगहों के लिए रेज़िन-बेस्ड ग्राउट। कई रंगों में।'},
+  cpg:{n:'CEMENT POLYMER GROUT',c:'gr',en:'Polymer-modified cement grout for everyday tile joints.',hi:'रोज़ के टाइल जोड़ों के लिए पॉलिमर-मॉडिफ़ाइड सीमेंट ग्राउट।'},
+  gt1:{n:'ADMIX GT 1',c:'gr',en:'Liquid polymer additive mixed into cement grout for better joints.',hi:'सीमेंट ग्राउट में मिलाने वाला लिक्विड पॉलिमर एडिटिव।'},
+  wpm810:{n:'WPM 810',c:'wp',en:'Single-component PU liquid membrane. Elastic, seamless and bridges cracks.',hi:'सिंगल-कंपोनेंट PU लिक्विड मेम्ब्रेन। लचीली, बिना जोड़ की, दरारें ढकती है।'},
+  wpm300:{n:'WPM 300',c:'wp',en:'Water-based epoxy membrane for floor waterproofing.',hi:'फ़र्श की वॉटरप्रूफ़िंग के लिए वॉटर-बेस्ड इपॉक्सी मेम्ब्रेन।'},
+  wpm310:{n:'WPM 310',c:'wp',en:'Membrane for external walls (facades) and roofs.',hi:'बाहर की दीवारों और छत के लिए मेम्ब्रेन।'},
+  wpm3000:{n:'WPM 3000 BG',c:'wp',en:'Composite HDPE membrane for below-ground structures.',hi:'ज़मीन के नीचे के स्ट्रक्चर के लिए HDPE मेम्ब्रेन।'},
+  naclean:{n:'NON-ACIDIC TILE & STONE CLEANER',c:'cr',en:'Gentle cleaner for regular care of tiles and natural stone.',hi:'टाइल और पत्थर की रोज़ की सफ़ाई के लिए हल्का क्लीनर।'},
+  hdclean:{n:'HEAVY DUTY TILE CLEANER',c:'cr',en:'For tough stains and site residue left after fixing.',hi:'ज़िद्दी दाग और टाइल लगाने के बाद की गंदगी के लिए।'},
+  sealer:{n:'IMPREGNATING TILE & STONE SEALER',c:'cr',en:'Penetrating sealer that protects natural stone and tiles.',hi:'नेचुरल स्टोन और टाइल को अंदर से प्रोटेक्ट करने वाला सीलर।'},
+  r21:{n:'R 21 CE',c:'fl',en:'Self-smoothing epoxy floor topping, 0.5–1.0 mm.',hi:'सेल्फ़-स्मूदिंग इपॉक्सी फ़्लोर टॉपिंग, 0.5–1.0 mm।'},
+  su10:{n:'SU 10',c:'fl',en:'Polyurethane sealant for cracks and expansion joints.',hi:'दरारों और एक्सपेंशन जॉइंट के लिए PU सीलेंट।'}
+};
+
+/* ---------- state ---------- */
+let S;
+let RUN = 0;
+function fresh(){ S = {lang:'en', lead:{}, c:{}, node:null, ref:null, saved:false}; }
+fresh();
+const T = o => o == null ? '' : (typeof o === 'string' ? o : (o[S.lang] || o.en));
+const now = () => { const d = new Date(); return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0'); };
+
+/* ---------- CRM fields ---------- */
+const FIELDS = [
+  ['profile','Profile'],['lang','Language'],['stage','Stage / intent'],['need','Requirement'],
+  ['area','Area / zone'],['surface','Surface / tile'],['condition','Condition'],['photo','Site photo'],
+  ['work','Trade'],['exp','Experience'],['team','Team size'],['sells','Shop sells'],['shop','Shop name'],
+  ['project','Project type'],['units','Units'],['scope','Scope'],
+  ['products','Products matched'],['size','Size'],['timeline','Timeline'],
+  ['city','City'],['pincode','Pincode'],['name','Name'],['action','Next step']
+];
+const CORE = ['profile','need','products','size','timeline','city','pincode','name','action'];
+function setLead(k, v){ S.lead[k] = v; renderLead(k); }
+function scoreLead(){
+  const L = S.lead; let s = 0;
+  s += {'This week':3,'This month':2,'In 1–3 months':1}[L.timeline] || 0;
+  s += {'Over 1,500 sq ft':3,'500–1,500 sq ft':2,'100–500 sq ft':1}[L.size] || 0;
+  s += {'Facing a problem':2,'Building a new home':2,'Renovating':1}[L.stage] || 0;
+  s += {'Over 200':3,'50–200':2}[L.units] || 0;
+  if (L.profile === 'Builder / Developer') s += 3;
+  if (L.profile === 'Architect / Engineer') s += 2;
+  if (L.profile === 'Contractor / Applicator' && L.exp === '5+ years') s += 3;
+  if (L.profile === 'Contractor / Applicator' && L.team === 'More than 5') s += 2;
+  if (/visit|audit|meeting/i.test(L.action || '')) s += 2;
+  if (/Call/.test(L.action || '')) s += 1;
+  if (L.condition === 'Active leak') s += 2;
+  return s;
+}
+function routeLead(){
+  const L = S.lead, a = L.action || '';
+  if (!L.profile) return '—';
+  if (L.profile === 'Dealer / Shop owner') return 'Ardex area sales officer';
+  if (L.profile === 'Architect / Engineer' || L.profile === 'Builder / Developer') return 'Ardex TSE · projects';
+  if (L.profile === 'Contractor / Applicator') {
+    if (L.stage === 'Join Pehle Pro' ) return 'Trade team → Pathshala';
+    if (/dealer/i.test(a)) return 'Nearest dealer';
+    if (/expert/i.test(a)) return 'Ardex TSE';
+    return a ? 'WhatsApp · TDS pack' : 'Trade team';
+  }
+  if (L.need === 'Flooring') return 'Ardex TSE · commercial';
+  if (/visit|audit/i.test(a)) return 'Certified applicator + dealer';
+  if (/dealer/i.test(a)) return 'Nearest dealer';
+  if (/Call/.test(a)) return 'Ardex expert callback';
+  if (a) return 'WhatsApp nurture';
+  return '—';
+}
+function renderLead(changed){
+  const L = S.lead, dl = $('fields');
+  const keys = FIELDS.filter(([k]) => CORE.includes(k) || L[k] != null);
+  dl.innerHTML = keys.map(([k, lab]) => {
+    let v = L[k], html;
+    if (k === 'products' && Array.isArray(v) && v.length) html = '<div class="chips">' + v.map(p => '<span class="chip">' + esc(P[p].n) + '</span>').join('') + '</div>';
+    else html = v != null && v !== '' ? esc(v) : '—';
+    const empty = v == null || v === '' || (Array.isArray(v) && !v.length);
+    return '<dt>' + lab + '</dt><dd class="' + (empty ? 'empty' : '') + (k === changed ? ' flash' : '') + '">' + html + '</dd>';
+  }).join('');
+  const filled = CORE.filter(k => L[k] != null && !(Array.isArray(L[k]) && !L[k].length)).length;
+  $('fill').style.width = Math.round(filled / CORE.length * 100) + '%';
+  const s = scoreLead(), pill = $('pill');
+  if (!L.profile) { pill.className = 'pill none'; pill.textContent = 'Not scored'; }
+  else if (s >= 7) { pill.className = 'pill hot'; pill.textContent = 'Hot · ' + s; }
+  else if (s >= 4) { pill.className = 'pill warm'; pill.textContent = 'Warm · ' + s; }
+  else { pill.className = 'pill cold'; pill.textContent = 'Cold · ' + s; }
+  $('route').textContent = routeLead();
+  $('refline').textContent = S.ref ? 'Ref ' + S.ref : 'Ref pending';
+}
+
+/* ---------- stored leads (this browser only) ---------- */
+const KEY = 'ardex-bot-leads';
+function loadLeads(){ try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch(e) { return []; } }
+function saveLeads(a){ try { localStorage.setItem(KEY, JSON.stringify(a)); } catch(e) {} }
+let memLeads = loadLeads();
+function renderLeads(){
+  const rows = $('leadrows');
+  if (!memLeads.length) { rows.innerHTML = '<tr class="empty-row"><td colspan="7">Finish a chat and the lead lands here, scored and routed.</td></tr>'; return; }
+  rows.innerHTML = memLeads.slice().reverse().map(l => {
+    const cls = l.score >= 7 ? 'hot' : l.score >= 4 ? 'warm' : 'cold';
+    return '<tr><td class="mono">' + esc(l.ref) + '</td><td>' + esc(l.name || '—') + '</td><td>' + esc(l.profile || '—') + '</td><td>' + esc(l.need || l.stage || '—') + '</td><td>' + esc((l.city || '') + ' ' + (l.pincode || '')) + '</td><td><span class="pill ' + cls + '">' + l.score + '</span></td><td>' + esc(l.route) + '</td></tr>';
+  }).join('');
+}
+
+/* ---------- chat rendering ---------- */
+function scroll(){ chat.scrollTop = chat.scrollHeight; }
+function bubble(side, inner, extraCls){
+  const row = document.createElement('div'); row.className = 'row ' + side;
+  const tick = side === 'out' ? '<svg width="16" height="10" viewBox="0 0 16 10" aria-hidden="true"><path fill="none" stroke="var(--tick)" stroke-width="1.6" d="M1 5.5l3 3L10 1.5M6 8.5l1 0.5 6.5-7.5"/></svg>' : '';
+  row.innerHTML = '<div class="bub ' + (extraCls || '') + '">' + inner + '<div class="meta">' + now() + tick + '</div></div>';
+  chat.appendChild(row); scroll(); return row;
+}
+function productCard(k){
+  const p = P[k], c = CAT[p.c];
+  return '<div class="pimg ' + c.cls + '"><div><div class="cat">' + esc(T(c)) + '</div></div><div class="bag"><span>ARDEX<br>ENDURA</span></div></div>' +
+    '<div class="pbody"><div class="pname">' + esc(p.n) + '</div><div class="pdesc">' + esc(T(p)) + '</div></div>';
+}
+async function botSay(items){
+  const tok = RUN;
+  for (const it of items) {
+    if (tok !== RUN) return false;
+    const t = document.createElement('div'); t.className = 'row in';
+    t.innerHTML = '<div class="bub typing" aria-label="typing"><i></i><i></i><i></i></div>';
+    chat.appendChild(t); scroll(); $('wastatus').textContent = S.lang === 'hi' ? 'टाइप कर रहे हैं…' : 'typing…';
+    await wait(it.p ? 500 : Math.min(1100, 380 + T(it.t || '').length * 6));
+    t.remove(); $('wastatus').textContent = 'Business account';
+    if (tok !== RUN) return false;
+    if (it.p) bubble('in', productCard(it.p), 'pcard');
+    else bubble('in', esc(T(it.t)));
+  }
+  return true;
+}
+function userSay(text){ bubble('out', esc(text)); }
+
+/* ---------- options ---------- */
+function lockAll(){ chat.querySelectorAll('.btns button').forEach(b => b.disabled = true); closeSheet(); }
+function showOpts(node){
+  const opts = node.opts();
+  const row = chat.lastElementChild; const box = document.createElement('div'); box.className = 'btns';
+  if (opts.length <= 3) {
+    opts.forEach(o => { const b = document.createElement('button'); b.type = 'button'; b.textContent = T(o.l); b.onclick = () => { b.classList.add('picked'); choose(o); }; box.appendChild(b); });
+  } else {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'listbtn';
+    b.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>' + esc(S.lang === 'hi' ? 'विकल्प देखें' : 'View options');
+    b.onclick = () => openSheet(T(node.title || {en:'Choose one',hi:'एक चुनें'}), opts);
+    box.appendChild(b);
+  }
+  row.appendChild(box); scroll();
+}
+function openSheet(title, opts){
+  closeSheet();
+  const sh = document.createElement('div'); sh.className = 'sheet'; sh.id = 'sheet';
+  sh.innerHTML = '<div class="sheet-in" role="dialog" aria-label="' + esc(title) + '"><div class="sheet-h"><span>' + esc(title) + '</span><button type="button" aria-label="Close">×</button></div><ul></ul></div>';
+  const ul = sh.querySelector('ul');
+  opts.forEach(o => { const li = document.createElement('li'); const b = document.createElement('button'); b.type = 'button'; b.textContent = T(o.l); b.onclick = () => choose(o); li.appendChild(b); ul.appendChild(li); });
+  sh.querySelector('.sheet-h button').onclick = closeSheet;
+  sh.addEventListener('click', e => { if (e.target === sh) closeSheet(); });
+  screen.appendChild(sh); ul.querySelector('button').focus();
+}
+function closeSheet(){ const s = $('sheet'); if (s) s.remove(); }
+function choose(o){
+  lockAll();
+  userSay(T(o.l));
+  if (o.k) setLead(o.k, o.v || o.l.en);
+  if (o.c) Object.assign(S.c, o.c);
+  if (o.fx) o.fx();
+  go(typeof o.next === 'function' ? o.next() : o.next);
+}
+
+/* ---------- phase rail ---------- */
+function setPhase(p){ document.querySelectorAll('#rail div').forEach(d => { const n = +d.dataset.p; d.className = n < p ? 'done' : n === p ? 'now' : ''; }); }
+
+/* ---------- recommendation ---------- */
+function recommend(){
+  const L = S.lead, c = S.c; let list = [];
+  const need = L.need, scope = L.scope;
+  if (scope) {
+    list = {'Tiling and stone':['gold','ardiflex','epoxy'],'Waterproofing':['wpm810','wpm300','wpm3000'],'Flooring':['r21','su10'],'Complete package':['gold','epoxy','wpm810','wpm300']}[scope] || [];
+    return list;
+  }
+  if (need === 'Tiling') {
+    const ext = c.area === 'ext', wet = c.area === 'bath' || c.area === 'kit';
+    if (c.area === 'over') list.push('platinum');
+    else if (c.type === 'mosaic') list.push('diamond');
+    else if (c.type === 'stone') list.push('gold', 'white');
+    else if (c.type === 'large') list.push(ext ? 'ardiflex' : 'gold');
+    else list.push(ext ? 'gold' : 'silver');
+    list.push(wet ? 'epoxy' : 'cpg');
+  } else if (need === 'Waterproofing') {
+    list = {roof:['wpm810'], bath:['wpm300'], ext:['wpm310'], base:['wpm3000'], tank:[]}[c.zone] || [];
+  } else if (need === 'Grout & joints') {
+    list = c.garea === 'other' ? ['cpg','gt1'] : ['epoxy'];
+  } else if (need === 'Cleaning & sealing') {
+    list = {reg:['naclean'], tough:['hdclean'], seal:['sealer']}[c.care] || [];
+  } else if (need === 'Flooring') {
+    list = c.ftype === 'shop' ? ['r21'] : ['r21','su10'];
+  }
+  return list;
+}
+
+/* ---------- conversation nodes ---------- */
+const L = (en, hi) => ({en, hi});
+const N = {
+  lang: {ph:1,
+    say: () => [{t:'Namaste! Welcome to ARDEX ENDURA. I can help you pick the right tile adhesive, grout, waterproofing or floor solution, and connect you to an expert.'},
+                {t:'Which language would you like to chat in?\nआप किस भाषा में बात करना चाहेंगे?'}],
+    opts: () => [
+      {l:'English', k:'lang', v:'English', fx:() => S.lang = 'en', next:'profile'},
+      {l:'हिंदी', k:'lang', v:'Hindi', fx:() => S.lang = 'hi', next:'profile'},
+      {l:L('Tamil, Kannada, Telugu…','தமிழ் · ಕನ್ನಡ · తెలుగు'), k:'lang', v:'Regional (Hindi fallback in prototype)', fx:() => S.lang = 'hi', next:'regional'}
+    ]},
+  regional: {ph:1, say: () => [{t:L('Regional languages go live in phase 1 of the rollout. For this demo, we continue in Hindi.','क्षेत्रीय भाषाएँ रोलआउट के पहले फ़ेज़ में शुरू होंगी। इस डेमो में हम हिंदी में बात करते हैं।')}], auto:'profile'},
+  profile: {ph:1, title:L('I am a…','मैं हूँ…'),
+    say: () => [{t:L('Great! To guide you right, tell me who you are.','बढ़िया! सही जानकारी देने के लिए बताइए, आप कौन हैं?')}],
+    opts: () => [
+      {l:L('Homeowner','घर का मालिक'), k:'profile', v:'Homeowner', next:'h_stage'},
+      {l:L('Contractor / Applicator','कॉन्ट्रैक्टर / कारीगर'), k:'profile', v:'Contractor / Applicator', next:'a_intent'},
+      {l:L('Dealer / Shop owner','डीलर / दुकानदार'), k:'profile', v:'Dealer / Shop owner', next:'d_intent'},
+      {l:L('Architect / Engineer','आर्किटेक्ट / इंजीनियर'), k:'profile', v:'Architect / Engineer', next:'s_need'},
+      {l:L('Builder / Developer','बिल्डर / डेवलपर'), k:'profile', v:'Builder / Developer', next:'b_project'}
+    ]},
+
+  /* homeowner */
+  h_stage: {ph:2, title:L('Right now…','अभी…'),
+    say: () => [{t:L('Happy to help with your home. What\'s happening right now?','आपके घर के लिए ख़ुशी से मदद करेंगे। अभी क्या चल रहा है?')}],
+    opts: () => [
+      {l:L('Building a new home','नया घर बन रहा है'), k:'stage', v:'Building a new home', next:'h_need'},
+      {l:L('Renovating','रिनोवेशन चल रहा है'), k:'stage', v:'Renovating', next:'h_need'},
+      {l:L('Facing a problem (leak, loose tiles)','कोई समस्या है (लीकेज, ढीली टाइल)'), k:'stage', v:'Facing a problem', next:'h_problem'},
+      {l:L('Just exploring','बस जानकारी चाहिए'), k:'stage', v:'Just exploring', next:'h_need'}
+    ]},
+  h_problem: {ph:2, title:L('I see…','मुझे दिख रहा है…'),
+    say: () => [{t:L('Sorry to hear that. What are you seeing?','यह सुनकर अफ़सोस हुआ। आपको क्या दिख रहा है?')}],
+    opts: () => [
+      {l:L('Leak or damp patch','लीकेज या सीलन'), k:'need', v:'Waterproofing', fx:() => setLead('condition','Leak / damp'), next:'w_zone'},
+      {l:L('Tiles loose or sound hollow','टाइल ढीली या खोखली आवाज़'), k:'need', v:'Tiling', fx:() => setLead('condition','Loose / hollow tiles'), next:'t_area'},
+      {l:L('Gaps or dark grout joints','जोड़ों में गैप या कालापन'), k:'need', v:'Grout & joints', fx:() => setLead('condition','Grout gaps / dark joints'), next:'g_area'},
+      {l:L('Stains on tiles or stone','टाइल या पत्थर पर दाग'), k:'need', v:'Cleaning & sealing', fx:() => setLead('condition','Stains'), next:'c_need'}
+    ]},
+  h_need: {ph:2, title:L('I need help with…','मुझे मदद चाहिए…'),
+    say: () => [{t:L('What do you need help with?','आपको किस चीज़ में मदद चाहिए?')}],
+    opts: () => [
+      {l:L('Tiling','टाइल लगवाना'), k:'need', v:'Tiling', next:'t_area'},
+      {l:L('Waterproofing','वॉटरप्रूफ़िंग'), k:'need', v:'Waterproofing', next:'w_zone'},
+      {l:L('Grout & joints','जोड़ भरना (ग्राउट)'), k:'need', v:'Grout & joints', next:'g_area'},
+      {l:L('Cleaning & sealing','सफ़ाई और सीलिंग'), k:'need', v:'Cleaning & sealing', next:'c_need'},
+      {l:L('Flooring for shop, office or factory','दुकान, ऑफ़िस या फ़ैक्ट्री का फ़्लोर'), k:'need', v:'Flooring', next:'f_type'}
+    ]},
+  t_area: {ph:3, title:L('Tiles go in…','टाइल लगेगी…'),
+    say: () => [{t:L('Where will the tiles go?','टाइल कहाँ लगनी है?')}],
+    opts: () => [
+      {l:L('Bathroom','बाथरूम'), k:'area', v:'Bathroom', c:{area:'bath'}, next:'t_type'},
+      {l:L('Kitchen','किचन'), k:'area', v:'Kitchen', c:{area:'kit'}, next:'t_type'},
+      {l:L('Floors (living room, bedrooms)','फ़र्श (हॉल, बेडरूम)'), k:'area', v:'Interior floors', c:{area:'floor'}, next:'t_type'},
+      {l:L('Outside walls or balcony','बाहर की दीवार या बालकनी'), k:'area', v:'Exterior / balcony', c:{area:'ext'}, next:'t_type'},
+      {l:L('Over existing tiles','पुरानी टाइल के ऊपर'), k:'area', v:'Over existing tiles', c:{area:'over'}, next:'t_type'}
+    ]},
+  t_type: {ph:3, title:L('I\'m fixing…','मुझे लगाना है…'),
+    say: () => [{t:L('What are you fixing?','कौनसी टाइल या पत्थर लगाना है?')}],
+    opts: () => [
+      {l:L('Ceramic tiles','सिरेमिक टाइल'), k:'surface', v:'Ceramic', c:{type:'ceramic'}, next:'rec'},
+      {l:L('Large vitrified tiles (2×2 ft or bigger)','बड़ी विट्रिफ़ाइड टाइल (2×2 फ़ुट या बड़ी)'), k:'surface', v:'Large-format vitrified', c:{type:'large'}, next:'rec'},
+      {l:L('Marble, granite or natural stone','मार्बल, ग्रेनाइट या पत्थर'), k:'surface', v:'Natural stone', c:{type:'stone'}, next:'rec'},
+      {l:L('Glass mosaic','ग्लास मोज़ेक'), k:'surface', v:'Glass mosaic', c:{type:'mosaic'}, next:'rec'}
+    ]},
+  w_zone: {ph:3, title:L('The problem area','कौनसा हिस्सा'),
+    say: () => [{t:L('Which part of the home?','घर का कौनसा हिस्सा?')}],
+    opts: () => [
+      {l:L('Terrace or roof','छत'), k:'area', v:'Terrace / roof', c:{zone:'roof'}, next:() => S.lead.condition ? 'w_photo' : 'w_state'},
+      {l:L('Bathroom or wet area','बाथरूम या गीली जगह'), k:'area', v:'Bathroom / wet area', c:{zone:'bath'}, next:() => S.lead.condition ? 'w_photo' : 'w_state'},
+      {l:L('Water tank','पानी की टंकी'), k:'area', v:'Water tank', c:{zone:'tank'}, next:() => S.lead.condition ? 'w_photo' : 'w_state'},
+      {l:L('Basement or underground','बेसमेंट या अंडरग्राउंड'), k:'area', v:'Basement / below ground', c:{zone:'base'}, next:() => S.lead.condition ? 'w_photo' : 'w_state'},
+      {l:L('External walls','बाहर की दीवारें'), k:'area', v:'External walls', c:{zone:'ext'}, next:() => S.lead.condition ? 'w_photo' : 'w_state'}
+    ]},
+  w_state: {ph:3,
+    say: () => [{t:L('Is water coming in right now?','क्या अभी पानी आ रहा है?')}],
+    opts: () => [
+      {l:L('Yes, it leaks','हाँ, लीक हो रहा है'), k:'condition', v:'Active leak', next:'w_photo'},
+      {l:L('Only damp signs','सिर्फ़ सीलन के निशान'), k:'condition', v:'Damp signs', next:'w_photo'},
+      {l:L('No, protecting in advance','नहीं, पहले से बचाव'), k:'condition', v:'Preventive', next:'w_pehle'}
+    ]},
+  w_pehle: {ph:3, say: () => [{t:L('Smart move. Waterproofing before a problem is easier and cheaper than breaking tiles and paint later.\nBaad mein nahi. Pehle.','सही फ़ैसला। समस्या से पहले वॉटरप्रूफ़िंग आसान और सस्ती पड़ती है। बाद में टाइल-पेंट तोड़ना नहीं पड़ता।\nबाद में नहीं। पहले।')}], auto:'rec'},
+  w_photo: {ph:3,
+    say: () => [{t:L('A photo helps our expert understand the problem before the visit. Want to share one?','फ़ोटो से हमारे एक्सपर्ट विज़िट से पहले समस्या समझ पाएँगे। फ़ोटो भेजेंगे?')}],
+    opts: () => [
+      {l:L('Send a photo','फ़ोटो भेजें'), fx:() => { bubble('out', '<div class="photo" role="img" aria-label="Photo of a damp patch"></div>'); setLead('photo','Shared (damp_patch.jpg)'); }, next:'w_photo_ok'},
+      {l:L('Skip for now','अभी नहीं'), next:'rec'}
+    ]},
+  w_photo_ok: {ph:3, say: () => [{t:L('Got it. The photo is attached to your request, so the expert comes prepared.','मिल गई। फ़ोटो आपकी रिक्वेस्ट के साथ जुड़ गई है, एक्सपर्ट तैयारी से आएँगे।')}], auto:'rec'},
+  g_area: {ph:3,
+    say: () => [{t:L('Where are the joints?','जोड़ कहाँ भरने हैं?')}],
+    opts: () => [
+      {l:L('Bathroom or kitchen','बाथरूम या किचन'), k:'area', v:'Bathroom / kitchen', c:{garea:'wet'}, next:'rec'},
+      {l:L('Other floors and walls','बाकी फ़र्श और दीवारें'), k:'area', v:'Other floors & walls', c:{garea:'other'}, next:'rec'},
+      {l:L('Pool or commercial kitchen','पूल या कमर्शियल किचन'), k:'area', v:'Pool / commercial kitchen', c:{garea:'pool'}, next:'rec'}
+    ]},
+  c_need: {ph:3,
+    say: () => [{t:L('What do you need?','आपको क्या चाहिए?')}],
+    opts: () => [
+      {l:L('Regular cleaning','रोज़ की सफ़ाई'), k:'area', v:'Regular cleaning', c:{care:'reg'}, next:'rec'},
+      {l:L('Tough stains or cement haze','ज़िद्दी दाग या सीमेंट की परत'), k:'area', v:'Tough stains / haze', c:{care:'tough'}, next:'rec'},
+      {l:L('Protect natural stone','पत्थर को प्रोटेक्ट करना'), k:'area', v:'Stone protection', c:{care:'seal'}, next:'rec'}
+    ]},
+  f_type: {ph:3, title:L('The space is…','जगह है…'),
+    say: () => [{t:L('What kind of space?','किस तरह की जगह है?')}],
+    opts: () => [
+      {l:L('Factory or warehouse','फ़ैक्ट्री या वेयरहाउस'), k:'area', v:'Factory / warehouse', c:{ftype:'ind'}, next:'rec'},
+      {l:L('Shop, showroom or office','दुकान, शोरूम या ऑफ़िस'), k:'area', v:'Shop / office', c:{ftype:'shop'}, next:'rec'},
+      {l:L('Parking','पार्किंग'), k:'area', v:'Parking', c:{ftype:'park'}, next:'rec'},
+      {l:L('Hospital or food unit','हॉस्पिटल या फ़ूड यूनिट'), k:'area', v:'Hospital / food unit', c:{ftype:'hyg'}, next:'rec'}
+    ]},
+
+  /* recommendation */
+  rec: {ph:4,
+    say: () => {
+      const list = recommend(); setLead('products', list.slice());
+      const out = [];
+      if (!list.length) {
+        out.push({t:L('This one needs a site check. Our expert will inspect and specify the right ARDEX ENDURA system for your tank.','इसके लिए साइट देखनी ज़रूरी है। हमारे एक्सपर्ट जाँच करके सही ARDEX ENDURA सिस्टम बताएँगे।')});
+      } else {
+        out.push({t:L('Here\'s what fits your job:','आपके काम के लिए ये सही रहेंगे:')});
+        list.forEach(p => out.push({p}));
+        const pro = S.lead.profile === 'Architect / Engineer' || S.lead.profile === 'Builder / Developer';
+        out.push({t: pro ? L('Indicative systems. A TSE confirms the specification with test data for your project.','ये शुरुआती सिस्टम हैं। TSE आपके प्रोजेक्ट के लिए टेस्ट डेटा के साथ स्पेसिफ़िकेशन फ़ाइनल करेंगे।')
+                         : L('This is an indicative pick. Our expert confirms the final system after seeing your site.','यह शुरुआती सुझाव है। साइट देखकर हमारे एक्सपर्ट फ़ाइनल सिस्टम तय करेंगे।')});
+      }
+      return out;
+    },
+    auto: () => (S.lead.need === 'Tiling' && (S.c.area === 'bath' || S.c.area === 'kit') && S.lead.stage !== 'Facing a problem') ? 'tip_wp' : 'size'},
+  tip_wp: {ph:4,
+    say: () => [{t:L('Pehle tip: waterproof the floor before the tiles go on. Once tiles are fixed, a leak means breaking them.','पहले वाली सलाह: टाइल लगाने से पहले फ़र्श की वॉटरप्रूफ़िंग करवा लें। टाइल लगने के बाद लीकेज हुआ तो टाइल तोड़नी पड़ती है।')}],
+    opts: () => [
+      {l:L('Add waterproofing too','वॉटरप्रूफ़िंग भी जोड़ें'), fx:() => { setLead('products', S.lead.products.concat(['wpm300'])); setLead('need','Tiling + waterproofing'); }, next:'tip_ok'},
+      {l:L('Only tiling','सिर्फ़ टाइलिंग'), next:'size'}
+    ]},
+  tip_ok: {ph:4, say: () => [{p:'wpm300'}, {t:L('Added. One visit covers both jobs.','जोड़ दिया। एक ही विज़िट में दोनों काम देख लिए जाएँगे।')}], auto:'size'},
+
+  /* capture */
+  size: {ph:5, title:L('Area size','जगह का साइज़'),
+    say: () => [{t:L('Roughly how big is the area?','जगह लगभग कितनी बड़ी है?')}],
+    opts: () => [
+      {l:L('Under 100 sq ft','100 sq ft से कम'), k:'size', v:'Under 100 sq ft', next:'timeline'},
+      {l:'100–500 sq ft', k:'size', v:'100–500 sq ft', next:'timeline'},
+      {l:'500–1,500 sq ft', k:'size', v:'500–1,500 sq ft', next:'timeline'},
+      {l:L('Over 1,500 sq ft','1,500 sq ft से ज़्यादा'), k:'size', v:'Over 1,500 sq ft', next:'timeline'},
+      {l:L('Not sure','पता नहीं'), k:'size', v:'Not sure', next:'timeline'}
+    ]},
+  timeline: {ph:5, title:L('Start date','कब शुरू'),
+    say: () => [{t:L('When do you plan to start?','काम कब शुरू करना है?')}],
+    opts: () => [
+      {l:L('This week','इसी हफ़्ते'), k:'timeline', v:'This week', next:'city'},
+      {l:L('This month','इसी महीने'), k:'timeline', v:'This month', next:'city'},
+      {l:L('In 1–3 months','1–3 महीने में'), k:'timeline', v:'In 1–3 months', next:'city'},
+      {l:L('Just planning','अभी सिर्फ़ प्लान'), k:'timeline', v:'Just planning', next:'city'}
+    ]},
+  city: {ph:5,
+    say: () => [{t:L('Which city are you in? Please add your pincode too.','आप किस शहर में हैं? पिनकोड भी लिखें।')}],
+    input: {ph:L('e.g. Bengaluru 560076','जैसे: पुणे 411001'),
+      take: v => {
+        const m = v.match(/\b\d{6}\b/);
+        if (!m) return L('Please add your 6-digit pincode, so we can find the nearest expert.','कृपया 6 अंकों का पिनकोड भी लिखें, ताकि नज़दीकी एक्सपर्ट मिल सके।');
+        setLead('pincode', m[0]); setLead('city', v.replace(m[0], '').replace(/[,\-]+/g,' ').trim() || '—'); return null;
+      },
+      next: () => S.lead.profile === 'Dealer / Shop owner' ? 'd_shop' : 'name'}},
+  d_shop: {ph:5, say: () => [{t:L('What\'s your shop\'s name?','आपकी दुकान का नाम क्या है?')}],
+    input: {ph:L('Shop name','दुकान का नाम'), take: v => { setLead('shop', v); return null; }, next:'name'}},
+  name: {ph:5, say: () => [{t:L('And your name?','और आपका नाम?')}],
+    input: {ph:L('Your name','आपका नाम'), take: v => { setLead('name', v); return null; },
+      next: () => (S.c.preAction || S.lead.stage === 'Join Pehle Pro' || S.lead.profile === 'Dealer / Shop owner') ? 'confirm' : 'action'}},
+  action: {ph:5, title:L('Next step','अगला कदम'),
+    say: () => [{t:L(`Thanks, ${S.lead.name}. How should we help next?`, `धन्यवाद, ${S.lead.name} जी। आगे कैसे मदद करें?`)}],
+    opts: () => {
+      const p = S.lead.profile;
+      if (p === 'Contractor / Applicator') return [
+        {l:L('Send TDS & application steps','TDS और लगाने का तरीका भेजें'), k:'action', v:'Send TDS & application steps', next:'confirm'},
+        {l:L('Nearest dealer','नज़दीकी डीलर बताएँ'), k:'action', v:'Nearest dealer', next:'confirm'},
+        {l:L('Talk to a technical expert','टेक्निकल एक्सपर्ट से बात'), k:'action', v:'Talk to a technical expert', next:'confirm'}];
+      if (p === 'Architect / Engineer' || p === 'Builder / Developer') return [
+        {l:L('Book a TSE meeting','TSE मीटिंग बुक करें'), k:'action', v:'Book a TSE meeting', next:'confirm'},
+        {l:L('Send TDS & spec text','TDS और स्पेक भेजें'), k:'action', v:'Send TDS & spec text', next:'confirm'},
+        {l:L('Call me back','मुझे कॉल करें'), k:'action', v:'Call me back', next:'confirm'}];
+      const wp = /waterproofing/i.test(S.lead.need || '');
+      return [
+        wp ? {l:L('Book a free Home Protection Audit','फ़्री होम प्रोटेक्शन ऑडिट बुक करें'), k:'action', v:'Free Home Protection Audit', next:'confirm'}
+           : {l:L('Book a free expert visit','फ़्री एक्सपर्ट विज़िट बुक करें'), k:'action', v:'Free expert visit', next:'confirm'},
+        {l:L('Call me back','मुझे कॉल करें'), k:'action', v:'Call me back', next:'confirm'},
+        {l:L('Find nearest dealer','नज़दीकी डीलर बताएँ'), k:'action', v:'Nearest dealer', next:'confirm'},
+        {l:L('Send product details here','प्रोडक्ट की जानकारी यहीं भेजें'), k:'action', v:'Send product details', next:'confirm'}];
+    }},
+  confirm: {ph:5,
+    enter: () => {
+      if (!S.ref) S.ref = 'AE-' + (Date.now() % 100000).toString().padStart(5, '0');
+      if (S.c.preAction && !S.lead.action) setLead('action', S.c.preAction);
+      if (S.lead.stage === 'Join Pehle Pro' && !S.lead.action) setLead('action','Verify + book Pathshala training');
+      if (S.lead.profile === 'Dealer / Shop owner' && !S.lead.action) setLead('action','Sales officer call');
+      renderLead();
+      if (!S.saved) { S.saved = true; memLeads.push(Object.assign({}, S.lead, {ref:S.ref, score:scoreLead(), route:routeLead()})); saveLeads(memLeads); renderLeads(); }
+    },
+    say: () => {
+      const Ld = S.lead, a = Ld.action || '', ref = S.ref, nm = Ld.name;
+      if (Ld.stage === 'Join Pehle Pro') return [{t:L(
+        `Welcome, ${nm}! Your Pehle Pro registration is in.\nRef: ${ref}\n\nNext:\n1. Our team calls you in your language to verify.\n2. Your first one-minute skill video arrives today.\n3. We book your Ardex Pathshala training slot.\n\nकाम पक्का। कमाई पक्की।`,
+        `स्वागत है, ${nm} जी! आपका पहले प्रो रजिस्ट्रेशन हो गया।\nरेफ़: ${ref}\n\nआगे:\n1. हमारी टीम आपकी भाषा में कॉल करके वेरिफ़ाई करेगी।\n2. आज ही आपकी पहली एक मिनट की हुनर वीडियो आएगी।\n3. हम आपकी Ardex पाठशाला ट्रेनिंग बुक करेंगे।\n\nकाम पक्का। कमाई पक्की।`)}];
+      if (Ld.profile === 'Dealer / Shop owner') return [{t:L(
+        `Thank you, ${nm}! ${Ld.shop} is registered with us.\nRef: ${ref}\n\nOur area sales officer for ${Ld.pincode} will call you within one working day with schemes and stock details.`,
+        `धन्यवाद, ${nm} जी! ${Ld.shop} हमारे साथ रजिस्टर हो गई।\nरेफ़: ${ref}\n\n${Ld.pincode} के लिए हमारे एरिया सेल्स ऑफ़िसर एक वर्किंग डे में स्कीम और स्टॉक की जानकारी के साथ कॉल करेंगे।`)}];
+      const prods = (Ld.products || []).map(p => P[p].n).join(', ') || (S.lang === 'hi' ? 'साइट पर तय होगा' : 'To be specified on site');
+      let next;
+      if (/visit|audit/i.test(a)) next = L('An Ardex expert will call within 2 hours to confirm your visit slot. The visit is free.','Ardex एक्सपर्ट 2 घंटे में कॉल करके विज़िट का समय तय करेंगे। विज़िट फ़्री है।');
+      else if (/meeting/i.test(a)) next = L('A Technical Services Engineer will call within one working day to fix the meeting.','टेक्निकल सर्विस इंजीनियर एक वर्किंग डे में कॉल करके मीटिंग तय करेंगे।');
+      else if (/Call|expert/i.test(a)) next = L('An Ardex expert will call you within 2 hours.','Ardex एक्सपर्ट 2 घंटे में आपको कॉल करेंगे।');
+      else if (/dealer/i.test(a)) next = L(`Your nearest ARDEX ENDURA dealer for ${Ld.pincode} is on the way in the next message.`, `${Ld.pincode} के लिए आपके नज़दीकी ARDEX ENDURA डीलर की जानकारी अगले मैसेज में आ रही है।`);
+      else next = L('Product sheets and application steps are on their way here.','प्रोडक्ट शीट और लगाने का तरीका यहीं भेज रहे हैं।');
+      return [{t:L(
+        `Done, ${nm}! Your request is registered.\nRef: ${ref}\n\n• Need: ${Ld.need || Ld.scope || '—'}\n• Area: ${Ld.area || Ld.project || '—'}\n• Products: ${prods}\n• Location: ${Ld.city} ${Ld.pincode}\n\n${next.en}`,
+        `हो गया, ${nm} जी! आपकी रिक्वेस्ट दर्ज हो गई।\nरेफ़: ${ref}\n\n• ज़रूरत: ${Ld.need || Ld.scope || '—'}\n• जगह: ${Ld.area || Ld.project || '—'}\n• प्रोडक्ट: ${prods}\n• लोकेशन: ${Ld.city} ${Ld.pincode}\n\n${next.hi}`)}];
+    },
+    opts: () => [
+      {l:L('Ask something else','कुछ और पूछें'), next:'again'},
+      {l:L('That\'s all, thanks','बस, धन्यवाद'), next:'bye'}
+    ]},
+  again: {ph:2, enter: () => newRequest(), say: () => [{t:L('Sure. Your details are saved, so this will be quick.','ज़रूर। आपकी जानकारी सेव है, इसलिए यह जल्दी होगा।')}],
+    auto: () => ({'Contractor / Applicator':'a_intent','Dealer / Shop owner':'d_intent','Architect / Engineer':'s_need','Builder / Developer':'b_project'}[S.lead.profile] || 'h_need')},
+  bye: {ph:5, say: () => [{t:L('Thank you for choosing ARDEX ENDURA. Type “menu” anytime to start again.','ARDEX ENDURA चुनने के लिए धन्यवाद। दोबारा शुरू करने के लिए कभी भी “menu” लिखें।')}]},
+
+  /* applicator */
+  a_intent: {ph:2, title:L('I want to…','मुझे…'),
+    say: () => [{t:L('Namaste, karigar ji! How can we help?','नमस्ते कारीगर जी! बताइए, क्या मदद करें?')}],
+    opts: () => [
+      {l:L('Join Pehle Pro: jobs, training, rewards','पहले प्रो से जुड़ें: काम, ट्रेनिंग, इनाम'), k:'stage', v:'Join Pehle Pro', fx:() => setLead('need','Trade partner onboarding'), next:'a_work'},
+      {l:L('Right product for a job','काम के लिए सही प्रोडक्ट'), k:'stage', v:'Product for a job', next:'h_need'},
+      {l:L('Rewards and points','इनाम और पॉइंट्स'), k:'stage', v:'Rewards query', next:'a_rewards'},
+      {l:L('Nearest dealer','नज़दीकी डीलर'), k:'stage', v:'Dealer locator', c:{preAction:'Nearest dealer'}, next:'city'}
+    ]},
+  a_rewards: {ph:2,
+    say: () => [{t:L('Scan every genuine ARDEX ENDURA pack in the ARDEX ENDURA Rewards app to earn points. Pehle Pros also get jobs sent to their phone. Want to join?','हर असली ARDEX ENDURA पैक को ARDEX ENDURA Rewards ऐप में स्कैन करें और पॉइंट कमाएँ। पहले प्रो को काम भी सीधे फ़ोन पर मिलता है। जुड़ना चाहेंगे?')}],
+    opts: () => [
+      {l:L('Yes, I want to join','हाँ, जुड़ना है'), k:'stage', v:'Join Pehle Pro', fx:() => setLead('need','Trade partner onboarding'), next:'a_work'},
+      {l:L('Not now','अभी नहीं'), next:'bye'}
+    ]},
+  a_work: {ph:3, title:L('My work','मेरा काम'),
+    say: () => [{t:L('What work do you mainly do?','आप मुख्य रूप से कौनसा काम करते हैं?')}],
+    opts: () => [
+      {l:L('Waterproofing','वॉटरप्रूफ़िंग'), k:'work', v:'Waterproofing', next:'a_exp'},
+      {l:L('Tile fixing','टाइल फ़िटिंग'), k:'work', v:'Tile fixing', next:'a_exp'},
+      {l:L('Painting','पेंटिंग'), k:'work', v:'Painting', next:'a_exp'},
+      {l:L('Mason','मिस्त्री'), k:'work', v:'Mason', next:'a_exp'},
+      {l:L('Contractor with a team','ठेकेदार (टीम के साथ)'), k:'work', v:'Contractor with team', next:'a_exp'}
+    ]},
+  a_exp: {ph:3, say: () => [{t:L('How many years of experience?','कितने साल का अनुभव है?')}],
+    opts: () => [
+      {l:L('0–2 years','0–2 साल'), k:'exp', v:'0–2 years', next:'a_team'},
+      {l:L('3–5 years','3–5 साल'), k:'exp', v:'3–5 years', next:'a_team'},
+      {l:L('5+ years','5+ साल'), k:'exp', v:'5+ years', next:'a_team'}
+    ]},
+  a_team: {ph:3, say: () => [{t:L('How many people work with you?','आपके साथ कितने लोग काम करते हैं?')}],
+    opts: () => [
+      {l:L('Just me','सिर्फ़ मैं'), k:'team', v:'Just me', next:'city'},
+      {l:'2–5', k:'team', v:'2–5', next:'city'},
+      {l:L('More than 5','5 से ज़्यादा'), k:'team', v:'More than 5', next:'city'}
+    ]},
+
+  /* dealer */
+  d_intent: {ph:2,
+    say: () => [{t:L('Welcome! What would you like to do?','स्वागत है! आप क्या करना चाहेंगे?')}],
+    opts: () => [
+      {l:L('Become an ARDEX ENDURA dealer','ARDEX ENDURA डीलर बनना है'), k:'stage', v:'New dealership', fx:() => setLead('need','Dealership'), next:'d_sell'},
+      {l:L('Stock, orders and schemes','स्टॉक, ऑर्डर और स्कीम'), k:'stage', v:'Existing dealer support', fx:() => setLead('need','Dealer support'), next:'d_sell'},
+      {l:L('Get customer leads at my shop','मेरी दुकान पर ग्राहक भेजें'), k:'stage', v:'Wants leads', fx:() => setLead('need','Lead routing to shop'), next:'d_sell'}
+    ]},
+  d_sell: {ph:3, title:L('My shop sells…','मेरी दुकान में…'),
+    say: () => [{t:L('What does your shop mainly sell?','आपकी दुकान में मुख्य रूप से क्या बिकता है?')}],
+    opts: () => [
+      {l:L('Tiles and sanitaryware','टाइल और सैनिटरी'), k:'sells', v:'Tiles & sanitaryware', next:'d_tip'},
+      {l:L('Paints and hardware','पेंट और हार्डवेयर'), k:'sells', v:'Paints & hardware', next:'city'},
+      {l:L('Construction chemicals','कंस्ट्रक्शन केमिकल'), k:'sells', v:'Construction chemicals', next:'city'},
+      {l:L('Cement and building material','सीमेंट और बिल्डिंग मटीरियल'), k:'sells', v:'Cement & building material', next:'city'}
+    ]},
+  d_tip: {ph:3, say: () => [{t:L('Good fit. Every tile sale is a chance to sell adhesive, grout and waterproofing with it.','बढ़िया। हर टाइल की बिक्री के साथ एडहेसिव, ग्राउट और वॉटरप्रूफ़िंग बेचने का मौका है।')}], auto:'city'},
+
+  /* architect / engineer */
+  s_need: {ph:2, title:L('I need…','मुझे चाहिए…'),
+    say: () => [{t:L('Welcome! How can our technical team help?','स्वागत है! हमारी टेक्निकल टीम कैसे मदद करे?')}],
+    opts: () => [
+      {l:L('System selection for a project','प्रोजेक्ट के लिए सिस्टम चुनना'), k:'stage', v:'System selection', next:'s_project'},
+      {l:L('TDS and spec sheets','TDS और स्पेक शीट'), k:'stage', v:'TDS / spec sheets', next:'s_project'},
+      {l:L('BOQ / specification text','BOQ / स्पेसिफ़िकेशन टेक्स्ट'), k:'stage', v:'BOQ text', next:'s_project'},
+      {l:L('Site meeting with a TSE','TSE के साथ साइट मीटिंग'), k:'stage', v:'Site meeting', next:'s_project'}
+    ]},
+  s_project: {ph:3, title:L('Project type','प्रोजेक्ट'),
+    say: () => [{t:L('What type of project?','प्रोजेक्ट किस तरह का है?')}],
+    opts: () => [
+      {l:L('Villa or independent house','विला या इंडिपेंडेंट घर'), k:'project', v:'Villa / independent house', next:'s_scope'},
+      {l:L('Apartment building','अपार्टमेंट'), k:'project', v:'Apartment building', next:'s_scope'},
+      {l:L('Commercial or retail','कमर्शियल या रिटेल'), k:'project', v:'Commercial / retail', next:'s_scope'},
+      {l:L('Industrial','इंडस्ट्रियल'), k:'project', v:'Industrial', next:'s_scope'},
+      {l:L('Hospital or hospitality','हॉस्पिटल या हॉस्पिटैलिटी'), k:'project', v:'Hospital / hospitality', next:'s_scope'}
+    ]},
+  s_scope: {ph:3, title:L('Scope','स्कोप'),
+    say: () => S.lead.profile === 'Builder / Developer'
+      ? [{t:L('Planning a leak-free handover? Our technical team builds the system spec with you. Which scope?','लीक-फ़्री हैंडओवर का प्लान है? हमारी टेक्निकल टीम आपके साथ सिस्टम स्पेक बनाएगी। किस काम के लिए?')}]
+      : [{t:L('Which scope?','किस काम के लिए?')}],
+    opts: () => [
+      {l:L('Tiling and stone','टाइलिंग और स्टोन'), k:'scope', v:'Tiling and stone', next:'rec'},
+      {l:L('Waterproofing','वॉटरप्रूफ़िंग'), k:'scope', v:'Waterproofing', next:'rec'},
+      {l:L('Flooring','फ़्लोरिंग'), k:'scope', v:'Flooring', next:'rec'},
+      {l:L('Complete package','पूरा पैकेज'), k:'scope', v:'Complete package', next:'rec'}
+    ]},
+
+  /* builder */
+  b_project: {ph:2,
+    say: () => [{t:L('Welcome! What are you building?','स्वागत है! आप क्या बना रहे हैं?')}],
+    opts: () => [
+      {l:L('Apartments','अपार्टमेंट'), k:'project', v:'Apartments', next:'b_units'},
+      {l:L('Villas','विला'), k:'project', v:'Villas', next:'b_units'},
+      {l:L('Commercial','कमर्शियल'), k:'project', v:'Commercial', next:'b_units'}
+    ]},
+  b_units: {ph:3, say: () => [{t:L('How many units?','कितनी यूनिट्स?')}],
+    opts: () => [
+      {l:L('Under 50','50 से कम'), k:'units', v:'Under 50', next:'b_stage'},
+      {l:'50–200', k:'units', v:'50–200', next:'b_stage'},
+      {l:L('Over 200','200 से ज़्यादा'), k:'units', v:'Over 200', next:'b_stage'}
+    ]},
+  b_stage: {ph:3, say: () => [{t:L('What stage is the project at?','प्रोजेक्ट किस स्टेज पर है?')}],
+    opts: () => [
+      {l:L('Structure','स्ट्रक्चर'), k:'stage', v:'Structure', next:'s_scope'},
+      {l:L('Finishing and tiling','फ़िनिशिंग और टाइलिंग'), k:'stage', v:'Finishing & tiling', next:'s_scope'},
+      {l:L('Handover soon','हैंडओवर जल्द'), k:'stage', v:'Handover soon', next:'s_scope'}
+    ]}
+};
+
+function newRequest(){
+  const keep = ['profile','lang','city','pincode','name','work','exp','team','shop','sells','project','units'];
+  const kept = {}; keep.forEach(k => { if (S.lead[k] != null) kept[k] = S.lead[k]; });
+  S.lead = kept; S.c = {}; S.ref = null; S.saved = false; renderLead();
+}
+
+/* ---------- engine ---------- */
+let expecting = null;
+async function go(id){
+  const n = N[id]; if (!n) return;
+  S.node = id; setPhase(n.ph || 1); expecting = null;
+  if (n.enter) n.enter();
+  const ok = await botSay(n.say());
+  if (!ok) return;
+  if (n.opts) showOpts(n);
+  if (n.input) { expecting = n; const m = $('msg'); m.placeholder = T(n.input.ph); m.focus({preventScroll:true}); }
+  else $('msg').placeholder = S.lang === 'hi' ? 'मैसेज लिखें' : 'Type a message';
+  if (n.auto) go(typeof n.auto === 'function' ? n.auto() : n.auto);
+}
+
+/* free-text understanding */
+async function freeText(v){
+  const s = v.toLowerCase();
+  const has = (...w) => w.some(x => s.includes(x));
+  if (has('menu','मेनू','restart','start')) { lockAll(); return go('profile'); }
+  if (has('leak','seepage','damp','सीलन','लीक','टपक','waterproof','वॉटरप्रूफ़')) {
+    lockAll(); if (!S.lead.profile) setLead('profile','Homeowner'); setLead('need','Waterproofing');
+    await botSay([{t:L('Got it, a water problem. Let\'s find the source.','समझ गए, पानी की समस्या है। चलिए जड़ ढूँढते हैं।')}]); return go('w_zone');
+  }
+  if (has('grout','joint','ग्राउट','जोड़')) { lockAll(); if (!S.lead.profile) setLead('profile','Homeowner'); setLead('need','Grout & joints'); return go('g_area'); }
+  if (has('tile','टाइल','adhesive','एडहेसिव','marble','मार्बल')) { lockAll(); if (!S.lead.profile) setLead('profile','Homeowner'); setLead('need','Tiling'); return go('t_area'); }
+  if (has('price','rate','cost','कीमत','दाम','रेट')) {
+    await botSay([{t:L('Prices depend on your city and dealer. Share your requirement and I\'ll connect you to the nearest dealer for today\'s rate.','कीमत शहर और डीलर के हिसाब से अलग होती है। अपनी ज़रूरत बताइए, हम नज़दीकी डीलर से आज का रेट दिलवा देंगे।')}]);
+  } else if (has('warranty','guarantee','वारंटी','गारंटी')) {
+    await botSay([{t:L('Warranty depends on the system and on application by a trained Ardex applicator. The expert shares the exact terms for your job.','वारंटी सिस्टम और ट्रेंड Ardex कारीगर से लगवाने पर निर्भर करती है। एक्सपर्ट आपके काम की सही शर्तें बताएँगे।')}]);
+  } else if (has('dealer','shop','डीलर','दुकान')) {
+    await botSay([{t:L('I can find your nearest ARDEX ENDURA dealer. Let\'s finish this step and I\'ll share it.','मैं आपका नज़दीकी ARDEX ENDURA डीलर ढूँढ दूँगा। यह स्टेप पूरा करें, फिर जानकारी भेजता हूँ।')}]);
+  } else if (has('hi','hello','namaste','नमस्ते','हेलो')) {
+    await botSay([{t:L('Hello! Please pick an option below.','नमस्ते! कृपया नीचे से एक विकल्प चुनें।')}]);
+  } else {
+    await botSay([{t:L('I didn\'t catch that. Please pick an option, or type “menu” to start over.','समझ नहीं आया। कृपया एक विकल्प चुनें, या “menu” लिखकर फिर से शुरू करें।')}]);
+  }
+  const n = N[S.node];
+  if (n && n.opts) { lockAll(); showOpts(n); }
+}
+
+$('composer').addEventListener('submit', async e => {
+  e.preventDefault();
+  const m = $('msg'), v = m.value.trim(); if (!v) return;
+  m.value = ''; userSay(v);
+  if (expecting) {
+    const n = expecting, err = n.input.take(v);
+    if (err) { await botSay([{t:err}]); return; }
+    expecting = null;
+    const nx = typeof n.input.next === 'function' ? n.input.next() : n.input.next;
+    return go(nx);
+  }
+  freeText(v);
+});
+
+function start(){
+  RUN++; fresh(); expecting = null; closeSheet();
+  chat.innerHTML = '<div class="daychip">Today</div><div class="daychip">Messages to this business are handled by an automated assistant.</div>';
+  renderLead(); setPhase(1);
+  bubble('out', esc('Hi'));
+  go('lang');
+}
+$('restart').onclick = start;
+$('togglecip').onclick = () => {
+  const hide = !$('panel').hidden;
+  $('panel').hidden = hide; $('stage').classList.toggle('solo', hide);
+  $('togglecip').textContent = hide ? 'Show Sakhaa CIP' : 'Hide Sakhaa CIP';
+  $('togglecip').setAttribute('aria-pressed', String(hide));
+};
+$('clear').onclick = () => { memLeads = []; saveLeads(memLeads); renderLeads(); };
+renderLeads();
+start();
+})();
+</script>
+
+</body></html>
